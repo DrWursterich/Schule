@@ -1,6 +1,5 @@
 package TicTacToe;
 
-
 public class TicTacToe {
 	private char[][] field;
 	private Player[] players;
@@ -16,14 +15,14 @@ public class TicTacToe {
 		this.resetField();
 		boolean won = false;
 		int turn = (int)Math.round(Math.random());
-		for(int i=9;i>0 && !won;i--) {
+		for(int i=this.field.length*this.field[0].length;i>0 && !won;i--) {
 			turn = 1 - turn;
 			this.printField();
 			int[] input;
 			do {
 				System.out.println(this.players[turn].getName() + "(" + this.players[turn].getSymbol() + ") ist am Zug");
 				input = this.players[turn].makeMove();
-			} while(input == null ? true : (input != null && this.field[input[0]][input[1]] != ' '));
+			} while(input == null ? true : (this.field[input[0]][input[1]] != ' '));
 			this.field[input[0]][input[1]] = this.players[turn].getSymbol();
 			won = this.getWon(input[0], input[1]);
 		}
@@ -32,9 +31,11 @@ public class TicTacToe {
 	}
 
 	private void resetField() {
-		this.field = new char[3][3];
-		for (int i=2;i>=0;i--) {
-			for (int j=2;j>=0;j--) {
+		if (this.field == null) {
+			this.field = new char[3][3];
+		}
+		for (int i=this.field.length-1;i>=0;i--) {
+			for (int j=this.field[0].length-1;j>=0;j--) {
 				this.field[i][j] = ' ';
 			}
 		}
@@ -61,10 +62,10 @@ public class TicTacToe {
 	}
 
 	private void printField() {
-		for (int i=0;i<4;i++) {
+		for (int i=0;i<this.field.length+1;i++) {
 			System.out.println("+---+---+---+");
-			for (int j=0;i!=3 && j<3;j++) {
-				System.out.print("| " + this.field[j][i] + (j==2 ? " |\n" : " "));
+			for (int j=0;i!=this.field.length && j<this.field[0].length;j++) {
+				System.out.print("| " + this.field[j][i] + (j==this.field[0].length-1 ? " |\n" : " "));
 			}
 		}
 	}

@@ -76,11 +76,9 @@ public class VierGewinnt {
 		}
 
 		for (int i=1;(lr-i>=0 && lc+i<this.field[0].length) ? this.field[lr-i][lc+i] == this.field[lr][lc] : false;i++) {
-			System.out.println("CHECKING: " + (lr-i) + ", " + (lc+i));
 			diagonal2Length++;
 		}
 		for (int i=1;(lr+i<this.field.length && lc-i>=0) ? this.field[lr+i][lc-i] == this.field[lr][lc] : false;i++) {
-			System.out.println("CHECKING: " + (lr+i) + ", " + (lr-i));
 			diagonal2Length++;
 		}
 

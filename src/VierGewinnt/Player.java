@@ -32,7 +32,7 @@ public class Player {
 			do {
 				System.out.print("Spalte: ");
 				input = this.formatInput(this.sc.next())-1;
-			} while(input < 0 || input > 7);
+			} while(input < 0 || input > 6);
 		return input;
 	}
 

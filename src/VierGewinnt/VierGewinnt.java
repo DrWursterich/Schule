@@ -24,7 +24,7 @@ public class VierGewinnt {
 				input = this.players[turn].makeMove();
 			} while(this.field[input][0] != ' ');
 			int height = 0;
-			while(height+1 < this.field[0].length ? this.field[input][height+1] == ' ' : false) {
+			while(height+1 < this.field[input].length ? this.field[input][height+1] == ' ' : false) {
 				height++;
 			}
 			this.field[input][height] = this.players[turn].getSymbol();

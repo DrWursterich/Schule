@@ -57,7 +57,6 @@ public class VierGewinnt {
 			verticalLength++;
 		}
 		for (int i=lr+1;i<this.field.length ? this.field[i][lc] == this.field[lr][lc] : false;i++) {
-			System.out.println("CHECKING: " + i + ", " + lc);
 			verticalLength++;
 		}
 

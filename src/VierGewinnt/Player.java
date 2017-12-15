@@ -8,7 +8,7 @@ public class Player {
 	private Scanner sc;
 
 	public Player(String name, char symbol) throws IllegalArgumentException{
-		if (name == null || name.trim() == "") {
+		if (name == null || "".equals(name.trim())) {
 			throw new IllegalArgumentException("invalid name");
 		}
 		if (symbol == ' ') {

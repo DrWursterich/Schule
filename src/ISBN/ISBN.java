@@ -1,4 +1,5 @@
 package ISBN;
+
 import java.util.Scanner;
 
 public class ISBN {
@@ -8,7 +9,7 @@ public class ISBN {
 		scanner.close();
 		int[] positionen = new int[0];
 		int[] zahlen = new int[0];
-		
+
 		for (int i=0;i<eingabe.length();i++) {
 			char buchstabe = eingabe.charAt(i);
 			try{
@@ -21,22 +22,25 @@ public class ISBN {
 		zahlen = addToArray(zahlen, getPruefziffer(zahlen));
 		String ausgabe = "";
 		int count = 0;
-		for (int i=0;i<zahlen.length+positionen.length-1;i++) {
-			if (positionen[count] == i) {
+		for (int i=0;i<zahlen.length+positionen.length;i++) {
+			if (count < positionen.length ? positionen[count] == i : false) {
 				ausgabe += "-";
-				count = Math.min(count+1, positionen.length-1);
+				count++;
 			} else {
 				ausgabe += zahlen[i-count];
 			}
 		}
-		ausgabe += zahlen[zahlen.length-1];
 		System.out.println(ausgabe);
 	}
-	
+
 	private static int getPruefziffer(int[] isbnZahlen) {
-		return (int)Math.random()*9;
+		int ret = 0;
+		for (int i=0;i<isbnZahlen.length;i++) {
+			ret += (i+1)*isbnZahlen[i];
+		}
+		return ret % 11;
 	}
-	
+
 	private static int[] addToArray(int[] a, int b) {
 		int[] temp = new int[a.length+1];
 		System.arraycopy(a, 0, temp, 0, a.length);

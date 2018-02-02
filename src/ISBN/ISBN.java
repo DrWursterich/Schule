@@ -14,7 +14,7 @@ public class ISBN {
 			char buchstabe = eingabe.charAt(i);
 			try{
 				zahlen = addToArray(zahlen, Integer.parseInt(""+buchstabe));
-			}catch(NumberFormatException error){
+			} catch(NumberFormatException error){
 				positionen = addToArray(positionen, i);
 			};
 		}

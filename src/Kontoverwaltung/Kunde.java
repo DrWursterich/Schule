@@ -4,7 +4,7 @@ import java.util.GregorianCalendar;
 import java.util.ArrayList;
 
 public class Kunde {
-	private static String kundenNummerierung = "00000";
+	private static String kundenNummerierung = "00001";
 	private String kundenNummer;
 	private String name;
 	private String adresse;
@@ -17,9 +17,11 @@ public class Kunde {
 		this.adresse = adresse;
 		this.myBank = myBank;
 		this.kundenNummer = Kunde.kundenNummerierung;
-		Kunde.kundenNummerierung = (Integer.parseInt(Kunde.kundenNummerierung)+1)+"";
-		Konto konto = new Konto(this, this.myBank);
-		this.myKonten.add(konto);
+		Kunde.kundenNummerierung = Helper.increaseString(Kunde.kundenNummerierung);
+	}
+	
+	protected void addKonto(Konto k) {
+		this.myKonten.add(k);
 	}
 
 	public String getName() {
@@ -31,6 +33,7 @@ public class Kunde {
 		for(int i = 0; i < this.myKonten.size(); i++)
 		{
 			this.myKonten.get(i).printInfo();
+			System.out.println();
 		}
 	}
 }

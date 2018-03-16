@@ -25,4 +25,9 @@ class Helper {
 		default: return "";
 		}
 	}
+	
+	public static String increaseString(String s) {
+		String form = "%0" + s.length() + "d";
+		return String.format(form, Integer.parseInt(s));
+	}
 }

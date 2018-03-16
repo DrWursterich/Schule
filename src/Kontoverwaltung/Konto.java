@@ -16,15 +16,12 @@ public class Konto {
 		this.myKunde = myKunde;
 		this.myBank = myBank;
 		this.ktoNummer = Konto.kontenNummerierung;
-		Konto.kontenNummerierung = "" + (Integer.parseInt(Konto.kontenNummerierung) + 1);
+		Konto.kontenNummerierung = Helper.increaseString(Konto.kontenNummerierung);
+		myKunde.addKonto(this);
 	}
 
 	protected static String getKontenNummerierung() {
 		return kontenNummerierung;
-	}
-
-	protected static void setKontenNummerierung(String kontenNummerierung) {
-		Konto.kontenNummerierung = kontenNummerierung;
 	}
 
 	public void eroeffnen() {
@@ -32,17 +29,28 @@ public class Konto {
 	}
 
 	public void einzahlen(double betrag) {
-		Kontobewegung kontbew = new Kontobewegung(Math.abs(betrag), this);
+		Kontobewegung kontbew = new Kontobewegung(Math.abs(betrag), this, "Einzahlung");
 		myBew.add(kontbew);
 	}
 
 	public void abheben(double betrag) {
-		Kontobewegung kontbew = new Kontobewegung(-Math.abs(betrag), this);
+		Kontobewegung kontbew = new Kontobewegung(-Math.abs(betrag), this, "Auszahlung");
 		myBew.add(kontbew);
 	}
 
 	public void printInfo() {
 		System.out.println(String.format("     Kto-Nr.: %s,\n     BLZ: %s, %s,\n     Kontostand: %,2f Euro",
 				this.ktoNummer, this.myBank.getBLZ(), this.myBank.getName(), this.kontostand));
+	}
+	
+	public void printKontoauszug() {
+		System.out.println("Kontoauszug");
+		this.printInfo();
+		System.out.println("     Kontoinhaber: " + this.myKunde.getName()+ "\n");
+		for (int i=1;i<this.myBew.size();i++) {
+			System.out.println(String.format("%d    %s     % 7.2f Euro          %s",
+					i, Helper.getDate(this.myBew.get(i-1).getDatum()), this.myBew.get(i-1).getBetrag(), this.myBew.get(i-1).getBewegungsart() ));
+		}
+		
 	}
 }

@@ -5,7 +5,7 @@ import java.util.Locale;
 
 class Helper {
 	public static String getDate(GregorianCalendar g) {
-		return String.format("%02d.%3s.% 4d", g.get(GregorianCalendar.DAY_OF_MONTH),
+		return String.format("%02d.%3s.%4d", g.get(GregorianCalendar.DAY_OF_MONTH),
 				g.getDisplayName(GregorianCalendar.MONTH,
 				GregorianCalendar.SHORT, Locale.US),
 				g.get(GregorianCalendar.YEAR));

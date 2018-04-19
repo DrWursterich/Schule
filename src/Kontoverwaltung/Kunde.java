@@ -24,7 +24,8 @@ public class Kunde {
 		this.erfasseInstanz();
 	}
 
-	private void setzeParameter(Bank myBank, String name, String adresse) throws IllegalArgumentException, LimitExceededException {
+	private void setzeParameter(Bank myBank, String name, String adresse)
+			throws IllegalArgumentException, LimitExceededException {
 		if (myBank == null) {
 			throw new IllegalArgumentException("Bank kann nicht null sein");
 		}
@@ -75,15 +76,12 @@ public class Kunde {
 		System.out.println(this.myKonten.size()==0 ? ("Für den Kunden " + this.name
 				+ " sind keine Konten eingetragen") : ("Kontoinhaber: " + this.name));
 		for(int i=0;i<this.myKonten.size();i++) {
-			if (datum != null) {
-				this.myKonten.get(i).berechneZinsen(datum);
-			}
-			this.myKonten.get(i).printInfo();
+			this.myKonten.get(i).printInfo(datum);
 			System.out.println();
 		}
 	}
 
 	public void printInfo() {
-		this.printInfo(null);
+		this.printInfo(new GregorianCalendar());
 	}
 }

@@ -6,9 +6,9 @@ public final class Kontobewegung {
 	private final double betrag;
 	private final Konto myKonto;
 	private final String bewegungsart;
-	private final GregorianCalendar datum; 
-	
-	protected Kontobewegung(double betrag, Konto myKonto, String bewegungsart, GregorianCalendar datum) { 
+	private final GregorianCalendar datum;
+
+	protected Kontobewegung(double betrag, Konto myKonto, String bewegungsart, GregorianCalendar datum) {
 		if (Double.isInfinite(betrag) || Double.isNaN(betrag)) {
 			throw new IllegalArgumentException("Betrag ist ungültig");
 		}

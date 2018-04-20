@@ -4,6 +4,7 @@ import java.util.GregorianCalendar;
 import javax.naming.LimitExceededException;
 
 public class Girokonto extends Konto {
+	protected static double habenzins = 1.5;
 	private static double sollzins = 7.5;
 	protected static int zinsabrechnungMonatsInterval = 3;
 	private double dispo;

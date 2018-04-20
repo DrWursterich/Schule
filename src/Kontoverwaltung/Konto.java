@@ -8,7 +8,7 @@ import javax.naming.LimitExceededException;
 public abstract class Konto {
 	private static String kontenNummerierung = "00000001";
 	protected static int zinsabrechnungMonatsInterval = 12;
-	protected static double habenzins = 1.5;
+	protected static double habenzins = 5;
 	protected String ktoNummer;
 	public double kontostand;
 	protected Kunde myKunde;
@@ -97,8 +97,9 @@ public abstract class Konto {
 		this.printInfo(datum);
 		System.out.println("\tKontoinhaber: " + this.myKunde.getName() + "\n");
 		for (int i=1;i<=this.myBew.size();i++) {
-			System.out.println(String.format("%d\t%s\t%7.2f Euro\t\t%s",
+			System.out.println(String.format("%d\t%s\t%s%7.2f Euro\t\t%s",
 					i, Helper.getDate(this.myBew.get(i-1).getDatum()),
+					("Auszahlung".equals(this.myBew.get(i-1).getBewegungsart()) ? "-" : " "),
 					this.myBew.get(i-1).getBetrag(), this.myBew.get(i-1).getBewegungsart()));
 		}
 	}
@@ -119,6 +120,8 @@ public abstract class Konto {
 		temp.add(GregorianCalendar.MONTH, interval-(temp.get(GregorianCalendar.MONTH)
 				+ (datumVon.get(GregorianCalendar.DAY_OF_MONTH)==1 ? 1 : 0))%interval);
 		while(!temp.after(datum)) {
+			GregorianCalendar t = (GregorianCalendar)temp.clone();
+			t.add(GregorianCalendar.DAY_OF_MONTH, 1);
 			double zinsSumme = this.getZinsSumme(this.kontostand, datumVon, temp);
 			this.createKontoBewegung(zinsSumme, "Zinsen", temp);
 			this.kontostand += zinsSumme;
@@ -136,7 +139,8 @@ public abstract class Konto {
 	protected double getJahresanteil(GregorianCalendar datumVon, GregorianCalendar datumBis) {
 		double TageUnterschied = TimeUnit.DAYS.convert(datumBis.getTimeInMillis()
 				- datumVon.getTimeInMillis(), TimeUnit.MILLISECONDS);
-		return TageUnterschied/(datumBis.isLeapYear(datumBis.get(GregorianCalendar.YEAR)) ? 366 : 365);
+		return Math.floor(TageUnterschied)/
+				(datumBis.isLeapYear(datumBis.get(GregorianCalendar.YEAR)) ? 366.0 : 365.0);
 	}
 
 	public Kunde getKunde() {

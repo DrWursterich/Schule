@@ -3,7 +3,7 @@ package ArrayBearbeitung;
 import java.util.Arrays;
 import java.util.Enumeration;
 
-public class Tester<T extends Comparable> implements ArrayBearbeitung<T>, Enumeration<T> {
+public class Tester<T extends Addable> implements ArrayBearbeitung<T>, Enumeration<T> {
 	private T[] items;
 	private int pos = 0;
 
@@ -30,7 +30,7 @@ public class Tester<T extends Comparable> implements ArrayBearbeitung<T>, Enumer
 	}
 
 	@Override
-	public T elementeSumme(T[] array) {
-		return Arrays.stream(array).reduce((a, b) -> a.).get();
+	public double elementeSumme(T[] array) {
+		return Arrays.stream(array).mapToDouble(i -> i.getValue()).sum();
 	}
 }

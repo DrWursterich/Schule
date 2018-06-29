@@ -12,10 +12,14 @@ public class Bauteil {
 		this.TeileListe = TeileListe;
 		this.Preis = Preis;
 	}
+	
+	public double bestimmePreis() {
+		return this.Preis + (this.TeileListe != null
+				? Arrays.stream(this.TeileListe).mapToDouble(Bauteil::bestimmePreis).sum()
+				: 0);
+	}
 
 	public double getElementPreis() {
-		return this.Preis + (this.TeileListe != null
-				? Arrays.stream(this.TeileListe).mapToDouble(Bauteil::getElementPreis).sum()
-				: 0);
+		return this.Preis;
 	}
 }

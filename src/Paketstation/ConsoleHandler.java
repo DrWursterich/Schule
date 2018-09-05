@@ -1,7 +1,6 @@
 package Paketstation;
 
 import java.util.Scanner;
-import java.util.function.Function;
 
 public class ConsoleHandler extends Handler {
 	private final Scanner scanner;
@@ -16,16 +15,14 @@ public class ConsoleHandler extends Handler {
 	}
 
 	@Override
-	public void promptUser(UserOption<?>... options) {
-		System.out.println("Paketstation Menü");
+	public void promptUser(UserOption... options) {
+		System.out.println("Paketstation MenÃ¼");
 		for (int i=0;i<options.length;i++) {
 			System.out.println("(" + (i + 1) + ") " + options[i].getTitle());
 		}
 		int input = this.scanner.nextInt();
-		for (int i=0;i<options.length;i++) {
-			if (input == i) {
-				options[i].run();
-			}
+		if (input > 0 && input <= options.length) {
+			options[input - 1].run();
 		}
 	}
 }

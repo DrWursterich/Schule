@@ -1,31 +1,46 @@
 package Paketstation;
 
-import java.util.function.Consumer;
-
 public class PackageStation {
-	private final Handler.UserOption<?>[] menuOptions;
 	private final Package[] packages;
 	private final Handler handler;
-	
+	private final Handler.UserOption[] menuOptions;
+
 	public PackageStation(int size, Handler handler) {
 		this.packages = new Package[size];
 		this.handler = handler;
-		Consumer<Package> a = this::receivePackage;
-		this.menuOptions = new Handler.UserOption<?>[]{
-				new Handler.UserOption<Package>("Paket einlagern", a, null)
+		this.menuOptions = new Handler.UserOption[]{
+				new Handler.UserOption("Paket einlagern", this::receivePackage),
+				new Handler.UserOption("Packet(e) entnehmen", this::removePackages),
+				new Handler.UserOption("Packete anzeigen", this::listPackages),
+				new Handler.UserOption("Beenden", this::exit)
 			};
 		this.run();
 	}
-	
+
 	private void run() {
-		this.handler.promptUser(this.menuOptions);
+		while (true) {
+			this.handler.promptUser(this.menuOptions);
+		}
 	}
-	
-	public void receivePackage(Package pack) {
-		
+
+	public void receivePackage() {
+		System.out.println("receivePackage");
 	}
-	
-	public static void main(String...args) {
+
+	public void removePackages() {
+		System.out.println("removePackages");
+	}
+
+	public void listPackages() {
+		System.out.println("listPackages");
+	}
+
+	public void exit() {
+		System.out.println("exiting");
+		System.exit(0);
+	}
+
+	public static void main(String... args) {
 		Handler handler = new ConsoleHandler();
 		int size = 9;
 		int argsPos = 0;

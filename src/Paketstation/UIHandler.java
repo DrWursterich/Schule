@@ -1,7 +1,6 @@
 package Paketstation;
 
 public class UIHandler extends Handler {
-
 	public UIHandler() {
 		// TODO Auto-generated constructor stub
 	}
@@ -12,9 +11,7 @@ public class UIHandler extends Handler {
 	}
 
 	@Override
-	public void promptUser(UserOption<?>... options) {
+	public void promptUser(UserOption... options) {
 		// TODO Auto-generated method stub
-		
 	}
-
 }

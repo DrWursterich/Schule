@@ -100,6 +100,13 @@ public class ConsoleHandler extends Handler {
 	}
 
 	@Override
+	public void run() {
+		while (true) {
+			this.promptUser(this.menuOptions);
+		}
+	}
+
+	@Override
 	protected void finalize() {
 		this.scanner.close();
 	}

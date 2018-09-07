@@ -1,17 +1,31 @@
 package Paketstation;
 
 public class UIHandler extends Handler {
-	public UIHandler() {
-		// TODO Auto-generated constructor stub
+	@Override
+	public void promptUser(UserOption... options) {
+		// TODO Auto-generated method stub
+
 	}
 
 	@Override
 	public void handleOutput(String output) {
-		System.out.println(output);
+		// TODO Auto-generated method stub
+
 	}
 
 	@Override
-	public void promptUser(UserOption... options) {
+	public Package createPackage(int packageNumber) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void removePackages(Package[] packages) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void listPackages(Package... packages) {
 		// TODO Auto-generated method stub
 	}
 }

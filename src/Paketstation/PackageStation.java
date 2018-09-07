@@ -1,6 +1,7 @@
 package Paketstation;
 
 public class PackageStation {
+	private static int MAX_PACKAGE_NUMBER = 0;
 	private final Package[] packages;
 	private final Handler handler;
 	private final Handler.UserOption[] menuOptions;
@@ -24,19 +25,24 @@ public class PackageStation {
 	}
 
 	public void receivePackage() {
-		System.out.println("receivePackage");
+		for (int i=0;i<this.packages.length;i++) {
+			if (this.packages[i] == null) {
+				this.packages[i] = this.handler.createPackage(++PackageStation.MAX_PACKAGE_NUMBER);
+				return;
+			}
+		}
+		this.handler.handleOutput("Packstation ist voll!");
 	}
 
 	public void removePackages() {
-		System.out.println("removePackages");
+		this.handler.removePackages(this.packages);
 	}
 
 	public void listPackages() {
-		System.out.println("listPackages");
+		this.handler.listPackages(this.packages);
 	}
 
 	public void exit() {
-		System.out.println("exiting");
 		System.exit(0);
 	}
 
@@ -67,5 +73,9 @@ public class PackageStation {
 			}
 		}
 		PackageStation packageStation = new PackageStation(size, handler);
+	}
+
+	public static int getPackageNumber() {
+		return PackageStation.MAX_PACKAGE_NUMBER;
 	}
 }

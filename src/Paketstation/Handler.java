@@ -30,4 +30,10 @@ public abstract class Handler {
 	public abstract void promptUser(UserOption... options);
 
 	public abstract void handleOutput(String output);
+
+	public abstract Package createPackage(int packageNumber);
+
+	public abstract void removePackages(Package[] packages);
+
+	public abstract void listPackages(Package... packages);
 }

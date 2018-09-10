@@ -57,6 +57,9 @@ public class PackageStation extends Application {
 			if (args.size() - argsPos > 0) {
 				try {
 					size = Integer.parseInt(args.get(argsPos));
+					if (size <= 0) {
+						throw new NumberFormatException();
+					}
 				} catch (NumberFormatException e) {
 					handler.handleOutput("wrong size parameter \"" + args.get(argsPos) + "\"");
 					System.exit(0);

@@ -1,24 +1,36 @@
 package Paketstation;
 
+import java.util.ArrayList;
 import java.util.Optional;
+
+import javax.security.auth.callback.TextInputCallback;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ListView;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.util.Callback;
+import javafx.util.Pair;
 
 public class UIHandler extends Handler {
+	private static final Package NO_PACKAGE = new Package("-", PackageStation.getPackageNumber());
 	private ObservableList<Package> packageItems = FXCollections.observableArrayList();
 	private ListView<Package> packageList = new ListView<>();
 	private VBox root = new VBox();
@@ -31,7 +43,6 @@ public class UIHandler extends Handler {
 
 	@Override
 	public void promptUser(UserOption... options) {
-
 	}
 
 	@Override
@@ -59,31 +70,119 @@ public class UIHandler extends Handler {
 
 	@Override
 	public void removePackages(Package[] packages) {
-		this.handleOutput("remove Package");
+		Dialog<Pair<Boolean, String>> dialog = new Dialog<>();
+		GridPane gridPane = new GridPane();
+		ToggleGroup radioGroup = new ToggleGroup();
+		RadioButton radioReceiver = new RadioButton("Empfänger");
+		RadioButton radioSlot = new RadioButton("Fach");
+		TextField inputField = new TextField();
+
+		inputField.textProperty().addListener((v, o, n) -> {
+			if (radioSlot.equals(radioGroup.getSelectedToggle())) {
+				if (!n.matches("\\d*")) {
+					inputField.setText(n.replaceAll("[^\\d]", ""));
+				}
+				try {
+					int input = Integer.parseInt(n);
+					int clammedInput = Math.max(1, Math.min(this.packageItems.size(), input));
+					if (input != clammedInput) {
+						inputField.setText(Integer.toString(clammedInput));
+					}
+				} catch (NumberFormatException e) {
+					inputField.setText("1");
+				}
+			}
+		});
+		radioGroup.selectedToggleProperty().addListener((v, o, n) -> {
+			inputField.setText(inputField.getText());
+		});
+		radioReceiver.setToggleGroup(radioGroup);
+		radioReceiver.setSelected(true);
+		radioSlot.setToggleGroup(radioGroup);
+
+		gridPane.setHgap(10);
+		gridPane.setVgap(10);
+		gridPane.setPadding(new Insets(20, 150, 10, 10));
+		gridPane.add(new Label("Anhand welches Kriteriums möchten Sie selectieren?"), 0, 0);
+		gridPane.add(radioReceiver, 0, 1);
+		gridPane.add(radioSlot, 1, 1);
+		gridPane.add(inputField, 0, 2);
+
+		dialog.setTitle("Packet(e) entnehmen");
+		dialog.setHeaderText(null);
+		dialog.getDialogPane().setContent(gridPane);
+		dialog.getDialogPane().getButtonTypes().addAll(ButtonType.APPLY, ButtonType.CANCEL);
+		dialog.setResultConverter(button -> {
+			if (ButtonType.APPLY.equals(button)) {
+				return new Pair<>(
+						radioSlot.equals(radioGroup.getSelectedToggle()),
+						inputField.getText());
+			}
+			return null;
+		});
+		Optional<Pair<Boolean, String>> result = dialog.showAndWait();
+		ArrayList<Pair<Integer, String>> removed = new ArrayList<>();
+		if (result.isPresent()) {
+			if (result.get().getKey()) {
+				try {
+					int toRemove = Integer.parseInt(result.get().getValue()) - 1;
+					removed.add(new Pair<>(toRemove, packages[toRemove].getReceiver()));
+					packages[toRemove] = null;
+				} catch (NumberFormatException | IndexOutOfBoundsException e) {
+					this.handleOutput("Das Paket aus Fach " +
+							result.get().getValue() +
+							" konnte nicht entfernt werden.");
+				}
+			} else {
+				for (int i=0;i<packages.length;i++) {
+					if (packages[i] != null
+							&& packages[i].getReceiver().equals(result.get().getValue())) {
+						removed.add(new Pair<>(i, packages[i].getReceiver()));
+						packages[i] = null;
+					}
+				}
+			}
+		}
+		if (removed.size() == 0) {
+			this.handleOutput("Es wurden keine Pakete entnommen.");
+		} else {
+			String outputMessage = removed.size() + " Entnommene Packete:";
+			int slotDigits = 1 + (int)Math.log10(this.packageList.getItems().size());
+			for (Pair<Integer, String> p : removed) {
+				outputMessage += String.format(
+						"\nFach: %" + slotDigits + "d, Empfänger: %s",
+						p.getKey() + 1, p.getValue());
+			}
+			this.handleOutput(outputMessage);
+		}
 	}
 
 	@Override
 	public void listPackages(Package... packages) {
 		this.packageItems.clear();
-		this.packageItems.addAll(0, FXCollections.observableArrayList(packages));
+		for (int i=0;i<packages.length;i++) {
+			this.packageItems.add(
+					packages[i] != null
+						? packages[i]
+						: UIHandler.NO_PACKAGE);
+		}
 	}
 
 	@Override
 	public void run() {
 		this.packageList.setItems(this.packageItems);
-		this.packageList.setCellFactory(new Callback<ListView<Package>, ListCell<Package>>() {
-			@Override
-			public ListCell<Package> call(ListView<Package> param) {
-				System.out.println("Called");
-				return new ListCell<Package>() {
-					@Override
-					protected void updateItem(Package item, boolean empty) {
-						super.updateItem(item, empty);
-						System.out.println("updated");
-						setText(empty || item == null ? "-" : item.getReceiver());
-					}
-				};
-			}
+		this.packageList.setCellFactory(param -> {
+			return new ListCell<Package>() {
+				@Override
+				protected void updateItem(Package item, boolean empty) {
+					super.updateItem(item, empty);
+					setText(!empty && item != null
+							? UIHandler.NO_PACKAGE.equals(item)
+									? "-"
+									: item.getReceiver()
+							: null);
+				}
+			};
 		});
 		this.root.getChildren().addAll(this.menuBar(), this.packageList);
 		this.scene = new Scene(this.root,

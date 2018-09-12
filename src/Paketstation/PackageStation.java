@@ -1,33 +1,23 @@
 package Paketstation;
 
-public class PackageStation {
-	private static int MAX_PACKAGE_NUMBER = 0;
-	private final Package[] packages;
-	private final Handler handler;
-	private final Handler.UserOption[] menuOptions;
+import java.util.List;
 
-	public PackageStation(int size, Handler handler) {
-		this.packages = new Package[size];
-		this.handler = handler;
-		this.menuOptions = new Handler.UserOption[]{
-				new Handler.UserOption("Paket einlagern", this::receivePackage),
-				new Handler.UserOption("Packet(e) entnehmen", this::removePackages),
-				new Handler.UserOption("Packete anzeigen", this::listPackages),
-				new Handler.UserOption("Beenden", this::exit)
-			};
-		this.run();
-	}
+import javafx.application.Application;
+import javafx.stage.Stage;
 
-	private void run() {
-		while (true) {
-			this.handler.promptUser(this.menuOptions);
-		}
-	}
+public class PackageStation extends Application {
+	public static int MAX_PACKAGE_NUMBER = 0;
+	private Package[] packages;
+	private Handler handler;
 
 	public void receivePackage() {
 		for (int i=0;i<this.packages.length;i++) {
 			if (this.packages[i] == null) {
-				this.packages[i] = this.handler.createPackage(++PackageStation.MAX_PACKAGE_NUMBER);
+				Package newPackage = this.handler.createPackage(++PackageStation.MAX_PACKAGE_NUMBER);
+				if (newPackage == null) {
+					PackageStation.MAX_PACKAGE_NUMBER--;
+				}
+				this.packages[i] = newPackage;
 				return;
 			}
 		}
@@ -47,32 +37,49 @@ public class PackageStation {
 	}
 
 	public static void main(String... args) {
+		Application.launch(args);
+	}
+
+	@Override
+	public void start(Stage primaryStage) throws Exception {
+		List<String> args = this.getParameters().getRaw();
 		Handler handler = new ConsoleHandler();
-		int size = 9;
+		int size = 10;
 		int argsPos = 0;
-		if (args.length > 0) {
-			switch (args[0]) {
+		if (args.size() > 0) {
+			switch (args.get(0)) {
 				case "ui":
-					handler = new UIHandler();
-					break;
+					handler = new UIHandler(primaryStage);
 				case "console":
 					argsPos++;
 					break;
 			}
-			if (args.length - argsPos > 0) {
+			if (args.size() - argsPos > 0) {
 				try {
-					size = Integer.parseInt(args[argsPos]);
+					size = Integer.parseInt(args.get(argsPos));
+					if (size <= 0) {
+						throw new NumberFormatException();
+					}
 				} catch (NumberFormatException e) {
-					handler.handleOutput("wrong size parameter");
+					handler.handleOutput("wrong size parameter \"" + args.get(argsPos) + "\"");
 					System.exit(0);
 				}
 			}
-			if (args.length - argsPos == 0) {
+			if (args.size() - argsPos == 0) {
 				handler.handleOutput("wrong parameter usage");
 				System.exit(0);
 			}
 		}
-		PackageStation packageStation = new PackageStation(size, handler);
+		this.packages = new Package[size];
+		this.handler = handler;
+		this.handler.setMenuOptions(
+				new Handler.UserOption("Paket einlagern", this::receivePackage, "CTRL+N"),
+				new Handler.UserOption("Packet(e) entnehmen", this::removePackages, "CTRL+D"),
+				new Handler.UserOption("Packete anzeigen", this::listPackages, "CTRL+R"),
+				new Handler.UserOption("Beenden", this::exit, "CTRL+Q"));
+		this.handler.setOnUpdate(this::listPackages);
+		this.handler.setOnStart(this::listPackages);
+		this.handler.run();
 	}
 
 	public static int getPackageNumber() {

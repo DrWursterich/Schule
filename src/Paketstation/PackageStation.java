@@ -6,7 +6,7 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 
 public class PackageStation extends Application {
-	private static int MAX_PACKAGE_NUMBER = 0;
+	public static int MAX_PACKAGE_NUMBER = 0;
 	private Package[] packages;
 	private Handler handler;
 
@@ -44,7 +44,7 @@ public class PackageStation extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		List<String> args = this.getParameters().getRaw();
 		Handler handler = new ConsoleHandler();
-		int size = 9;
+		int size = 10;
 		int argsPos = 0;
 		if (args.size() > 0) {
 			switch (args.get(0)) {
@@ -73,10 +73,12 @@ public class PackageStation extends Application {
 		this.packages = new Package[size];
 		this.handler = handler;
 		this.handler.setMenuOptions(
-				new Handler.UserOption("Paket einlagern", this::receivePackage),
-				new Handler.UserOption("Packet(e) entnehmen", this::removePackages),
-				new Handler.UserOption("Packete anzeigen", this::listPackages),
-				new Handler.UserOption("Beenden", this::exit));
+				new Handler.UserOption("Paket einlagern", this::receivePackage, "CTRL+N"),
+				new Handler.UserOption("Packet(e) entnehmen", this::removePackages, "CTRL+D"),
+				new Handler.UserOption("Packete anzeigen", this::listPackages, "CTRL+R"),
+				new Handler.UserOption("Beenden", this::exit, "CTRL+Q"));
+		this.handler.setOnUpdate(this::listPackages);
+		this.handler.setOnStart(this::listPackages);
 		this.handler.run();
 	}
 

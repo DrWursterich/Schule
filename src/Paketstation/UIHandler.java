@@ -3,8 +3,6 @@ package Paketstation;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import javax.security.auth.callback.TextInputCallback;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -23,8 +21,11 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Pair;
@@ -33,6 +34,8 @@ public class UIHandler extends Handler {
 	private static final Package NO_PACKAGE = new Package("-", PackageStation.getPackageNumber());
 	private ObservableList<Package> packageItems = FXCollections.observableArrayList();
 	private ListView<Package> packageList = new ListView<>();
+	private VBox buttonBox = new VBox();
+	private HBox contentBox = new HBox();
 	private VBox root = new VBox();
 	private Scene scene;
 	private Stage parentStage;
@@ -43,7 +46,7 @@ public class UIHandler extends Handler {
 
 	@Override
 	public void promptUser(UserOption... options) {
-	}
+	} 
 
 	@Override
 	public void handleOutput(String output) {
@@ -98,6 +101,7 @@ public class UIHandler extends Handler {
 		});
 		radioReceiver.setToggleGroup(radioGroup);
 		radioReceiver.setSelected(true);
+		radioReceiver.requestFocus();
 		radioSlot.setToggleGroup(radioGroup);
 
 		gridPane.setHgap(10);
@@ -111,7 +115,12 @@ public class UIHandler extends Handler {
 		dialog.setTitle("Packet(e) entnehmen");
 		dialog.setHeaderText(null);
 		dialog.getDialogPane().setContent(gridPane);
-		dialog.getDialogPane().getButtonTypes().addAll(ButtonType.APPLY, ButtonType.CANCEL);
+		dialog.getDialogPane().getButtonTypes().addAll(
+				ButtonType.APPLY, ButtonType.CANCEL);
+		((Button)dialog.getDialogPane().lookupButton(
+					ButtonType.APPLY )
+				).setDefaultButton(true);
+		
 		dialog.setResultConverter(button -> {
 			if (ButtonType.APPLY.equals(button)) {
 				return new Pair<>(
@@ -179,12 +188,37 @@ public class UIHandler extends Handler {
 					setText(!empty && item != null
 							? UIHandler.NO_PACKAGE.equals(item)
 									? "-"
-									: item.getReceiver()
+									: this.formatItem(item)
 							: null);
+				}
+				
+				private String formatItem(Package item) {
+					return String.format(
+							"%-" + Package.MAX_RECEIVER_LENGTH 
+							+ "s\t%" 
+							+ ((int)Math.log10(
+									PackageStation.MAX_PACKAGE_NUMBER) + 1) 
+							+ "d", 
+						item.getReceiver(), 
+						item.getNumber());
 				}
 			};
 		});
-		this.root.getChildren().addAll(this.menuBar(), this.packageList);
+		Insets buttonInsets = new Insets(10);
+		for (UserOption option : this.menuOptions) {
+			Button button = new Button(option.getTitle());
+			VBox.setMargin(button, buttonInsets);
+			button.prefWidthProperty().bind(this.parentStage.widthProperty().multiply(0.3));
+			button.prefHeightProperty().bind(this.parentStage.heightProperty().divide(this.menuOptions.length));
+			button.setOnAction(e -> {
+				option.getAction().run();
+				this.onUpdate.run();
+			});
+			this.buttonBox.getChildren().add(button);
+		}
+		HBox.setHgrow(this.packageList, Priority.ALWAYS);
+		this.contentBox.getChildren().addAll(this.packageList, this.buttonBox);
+		this.root.getChildren().addAll(this.menuBar(), this.contentBox);
 		this.scene = new Scene(this.root,
 				0.75*Screen.getPrimary().getBounds().getWidth(),
 				0.60*Screen.getPrimary().getBounds().getHeight());
@@ -192,6 +226,7 @@ public class UIHandler extends Handler {
 		this.parentStage.setTitle(this.getClass().getPackage().getName());
 		this.parentStage.setScene(this.scene);
 		this.parentStage.show();
+		this.onStart.run();
 	}
 
 	private MenuBar menuBar() {
@@ -199,7 +234,11 @@ public class UIHandler extends Handler {
 		Menu fileMenu = new Menu("Datei");
 		for (UserOption option : this.menuOptions) {
 			MenuItem optionItem = new MenuItem(option.getTitle());
-			optionItem.setOnAction(e -> option.getAction().run());
+			optionItem.setOnAction(e -> {
+					option.getAction().run();
+					this.onUpdate.run();
+				});
+			optionItem.setAccelerator(option.getAccelerator());
 			fileMenu.getItems().add(optionItem);
 		}
 

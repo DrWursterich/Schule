@@ -7,7 +7,7 @@ public abstract class Handler {
 	protected Runnable onStart;
 	protected Runnable onUpdate;
 
-	public static class UserOption {
+	public class UserOption {
 		private final String title;
 		private final Runnable action;
 		private KeyCombination accelerator;
@@ -36,10 +36,9 @@ public abstract class Handler {
 
 		protected void run() {
 			this.action.run();
+			Handler.this.onUpdate.run();
 		}
 	}
-
-	public abstract void promptUser(UserOption... options);
 
 	public abstract void handleOutput(String output);
 
@@ -51,12 +50,22 @@ public abstract class Handler {
 
 	public abstract void run();
 	
+	public void initialize() {}
+	
 	public void setOnUpdate(Runnable action) {
 		this.onUpdate = action;
 	}
 	
+	public Runnable getOnUpdate() {
+		return this.onUpdate;
+	}
+	
 	public void setOnStart(Runnable action) {
 		this.onStart = action;
+	}
+	
+	public Runnable getOnStart() {
+		return this.onStart;
 	}
 
 	public void setMenuOptions(UserOption... menuOptions) {

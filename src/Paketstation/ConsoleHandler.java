@@ -15,20 +15,19 @@ public class ConsoleHandler extends Handler {
 		System.out.println(output);
 	}
 
-	@Override
-	public void promptUser(UserOption... options) {
+	private void promptUser() {
 		this.handleOutput("Paketstation Menü");
-		for (int i=0;i<options.length;i++) {
-			this.handleOutput("(" + (i + 1) + ") " + options[i].getTitle());
+		for (int i=0;i<this.menuOptions.length;i++) {
+			this.handleOutput("(" + (i + 1) + ") " + this.menuOptions[i].getTitle());
 		}
 		int input = 0;
-		while (input <= 0 || input > options.length) {
+		while (input <= 0 || input > this.menuOptions.length) {
 			this.handleOutput("Geben Sie die Zahl einer Aktion an, um diese auszuführen.");
 			try {
 				input = Integer.parseInt(this.scanner.next());
 			} catch (NumberFormatException e) {}
 		}
-		options[input - 1].run();
+		this.menuOptions[input - 1].run();
 		this.handleOutput("");
 	}
 
@@ -98,12 +97,15 @@ public class ConsoleHandler extends Handler {
 					packages[i] != null ? packages[i].getNumber() : "-"));
 		}
 	}
+	
+	@Override
+	public void initialize() {
+		this.setOnUpdate(this::promptUser);
+	}
 
 	@Override
 	public void run() {
-		while (true) {
-			this.promptUser(this.menuOptions);
-		}
+		this.promptUser();
 	}
 
 	@Override

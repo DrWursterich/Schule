@@ -31,8 +31,10 @@ import javafx.stage.Stage;
 import javafx.util.Pair;
 
 public class UIHandler extends Handler {
-	private static final Package NO_PACKAGE = new Package("-", PackageStation.getPackageNumber());
-	private ObservableList<Package> packageItems = FXCollections.observableArrayList();
+	private static final Package NO_PACKAGE = new Package(
+			"-", PackageStation.getPackageNumber());
+	private ObservableList<Package> packageItems = 
+			FXCollections.observableArrayList();
 	private ListView<Package> packageList = new ListView<>();
 	private VBox buttonBox = new VBox();
 	private HBox contentBox = new HBox();
@@ -43,10 +45,6 @@ public class UIHandler extends Handler {
 	public UIHandler(Stage stage) {
 		this.parentStage = stage;
 	}
-
-	@Override
-	public void promptUser(UserOption... options) {
-	} 
 
 	@Override
 	public void handleOutput(String output) {
@@ -178,7 +176,7 @@ public class UIHandler extends Handler {
 	}
 
 	@Override
-	public void run() {
+	public void initialize() {
 		this.packageList.setItems(this.packageItems);
 		this.packageList.setCellFactory(param -> {
 			return new ListCell<Package>() {
@@ -208,11 +206,13 @@ public class UIHandler extends Handler {
 		for (UserOption option : this.menuOptions) {
 			Button button = new Button(option.getTitle());
 			VBox.setMargin(button, buttonInsets);
-			button.prefWidthProperty().bind(this.parentStage.widthProperty().multiply(0.3));
-			button.prefHeightProperty().bind(this.parentStage.heightProperty().divide(this.menuOptions.length));
+			button.prefWidthProperty().bind(
+					this.parentStage.widthProperty().multiply(0.3));
+			button.prefHeightProperty().bind(
+					this.parentStage.heightProperty().divide(
+							this.menuOptions.length));
 			button.setOnAction(e -> {
-				option.getAction().run();
-				this.onUpdate.run();
+				option.run();
 			});
 			this.buttonBox.getChildren().add(button);
 		}
@@ -225,8 +225,11 @@ public class UIHandler extends Handler {
 
 		this.parentStage.setTitle(this.getClass().getPackage().getName());
 		this.parentStage.setScene(this.scene);
+	}
+	
+	@Override
+	public void run() {
 		this.parentStage.show();
-		this.onStart.run();
 	}
 
 	private MenuBar menuBar() {

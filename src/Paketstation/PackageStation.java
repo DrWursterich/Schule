@@ -29,6 +29,7 @@ public class PackageStation extends Application {
 	}
 
 	public void listPackages() {
+		System.out.println("list packages");
 		this.handler.listPackages(this.packages);
 	}
 
@@ -61,7 +62,9 @@ public class PackageStation extends Application {
 						throw new NumberFormatException();
 					}
 				} catch (NumberFormatException e) {
-					handler.handleOutput("wrong size parameter \"" + args.get(argsPos) + "\"");
+					handler.handleOutput(
+							"wrong size parameter \"" 
+							+ args.get(argsPos) + "\"");
 					System.exit(0);
 				}
 			}
@@ -73,12 +76,18 @@ public class PackageStation extends Application {
 		this.packages = new Package[size];
 		this.handler = handler;
 		this.handler.setMenuOptions(
-				new Handler.UserOption("Paket einlagern", this::receivePackage, "CTRL+N"),
-				new Handler.UserOption("Packet(e) entnehmen", this::removePackages, "CTRL+D"),
-				new Handler.UserOption("Packete anzeigen", this::listPackages, "CTRL+R"),
-				new Handler.UserOption("Beenden", this::exit, "CTRL+Q"));
+				handler.new UserOption(
+						"Paket einlagern", this::receivePackage, "CTRL+N"),
+				handler.new UserOption(
+						"Packet(e) entnehmen", this::removePackages, "CTRL+D"),
+				handler.new UserOption(
+						"Packete anzeigen", this::listPackages, "CTRL+R"),
+				handler.new UserOption(
+						"Beenden", this::exit, "CTRL+Q"));
 		this.handler.setOnUpdate(this::listPackages);
 		this.handler.setOnStart(this::listPackages);
+		this.handler.initialize();
+		this.handler.getOnStart().run();
 		this.handler.run();
 	}
 

@@ -1,14 +1,54 @@
 package Paketstation;
 
 import java.util.List;
-
+import java.util.function.Consumer;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
 public class PackageStation extends Application {
 	public static int MAX_PACKAGE_NUMBER = 0;
+	private Stage stage;
 	private Package[] packages;
 	private Handler handler;
+	private final Command[] commands = {
+			this.new Command("handler", e -> {
+				if ("ui".equals(e)) {
+					this.handler = new UIHandler(this.stage);
+				} else if (!"console".equals(e)) {
+					this.handler.handleOutput("Invalid handler \"" + e + "\"");
+					System.exit(0);
+				}
+			}),
+			this.new Command("size", e -> {
+				int size = 0;
+				try {
+					size = Integer.parseInt(e);
+				} catch (NumberFormatException ex) {
+					this.handler.handleOutput("Invalid size \"" + e + "\"");
+					System.exit(0);
+				}
+				this.packages = new Package[size];
+			})
+	};
+	
+	private class Command {
+		private final String name;
+		private final Consumer<String> action;
+		
+		Command(String name, Consumer<String> action) {
+			this.name = name;
+			this.action = action;
+		}
+		
+		String getName() {
+			return this.name;
+		}
+		
+		Consumer<String> getAction() {
+			return this.action;
+		}
+	}
+
 
 	public void receivePackage() {
 		for (int i=0;i<this.packages.length;i++) {
@@ -29,7 +69,6 @@ public class PackageStation extends Application {
 	}
 
 	public void listPackages() {
-		System.out.println("list packages");
 		this.handler.listPackages(this.packages);
 	}
 
@@ -43,38 +82,34 @@ public class PackageStation extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		this.stage = primaryStage;
+		this.handler = new ConsoleHandler();
 		List<String> args = this.getParameters().getRaw();
-		Handler handler = new ConsoleHandler();
-		int size = 10;
-		int argsPos = 0;
-		if (args.size() > 0) {
-			switch (args.get(0)) {
-				case "ui":
-					handler = new UIHandler(primaryStage);
-				case "console":
-					argsPos++;
-					break;
-			}
-			if (args.size() - argsPos > 0) {
-				try {
-					size = Integer.parseInt(args.get(argsPos));
-					if (size <= 0) {
-						throw new NumberFormatException();
+		for (int i = 0;i < args.size(); i++) {
+			String arg = args.get(i);
+			if (arg.startsWith("-")) {
+				arg = arg.substring(1);
+				boolean exists = false;
+				for (Command command : this.commands) {
+					if (command.getName().equals(arg)) {
+						exists = true;
+						if (args.size() > ++i) {
+							String param = args.get(i);
+							command.getAction().accept(param);
+							break;
+						} else {
+							this.abort(
+									"Missing parameter for " + arg);
+						}
 					}
-				} catch (NumberFormatException e) {
-					handler.handleOutput(
-							"wrong size parameter \"" 
-							+ args.get(argsPos) + "\"");
-					System.exit(0);
 				}
-			}
-			if (args.size() - argsPos == 0) {
-				handler.handleOutput("wrong parameter usage");
-				System.exit(0);
+				if (!exists) {
+					this.abort("Invalid command \"" + arg + "\" (not found)");
+				}
+			} else {
+				this.abort("Invalid command \"" + arg + "\"");
 			}
 		}
-		this.packages = new Package[size];
-		this.handler = handler;
 		this.handler.setMenuOptions(
 				handler.new UserOption(
 						"Paket einlagern", this::receivePackage, "CTRL+N"),
@@ -93,5 +128,10 @@ public class PackageStation extends Application {
 
 	public static int getPackageNumber() {
 		return PackageStation.MAX_PACKAGE_NUMBER;
+	}
+	
+	private void abort(String message) {
+		this.handler.handleOutput(message);
+		System.exit(0);
 	}
 }

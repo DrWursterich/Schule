@@ -124,7 +124,10 @@ public class UIHandler extends Handler {
 			}
 		});
 		radioGroup.selectedToggleProperty().addListener((v, o, n) -> {
-			inputField.setText("");
+			inputField.setText(
+					radioSlot.equals(radioGroup.getSelectedToggle())
+						? "1"
+						: "");
 		});
 		radioReceiver.setToggleGroup(radioGroup);
 		radioReceiver.setSelected(true);
@@ -173,7 +176,7 @@ public class UIHandler extends Handler {
 						slots[toRemove].setPackage(null);
 					} else {
 						this.handleOutput("Das Fach "
-								+ toRemove + " ist bereits leer.");
+								+ (toRemove + 1) + " ist bereits leer.");
 					}
 				} catch (NumberFormatException | IndexOutOfBoundsException e) {
 					this.handleOutput("Das Paket aus Fach "

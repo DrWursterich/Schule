@@ -6,6 +6,8 @@ public abstract class Handler {
 	protected UserOption[] menuOptions;
 	protected Runnable onStart;
 	protected Runnable onUpdate;
+	protected boolean enableOnStart = true;
+	protected boolean enableOnUpdate = true;
 
 	public class UserOption {
 		private final String title;
@@ -29,14 +31,16 @@ public abstract class Handler {
 		public Runnable getAction() {
 			return this.action;
 		}
-		
+
 		public KeyCombination getAccelerator() {
 			return this.accelerator;
 		}
 
 		protected void run() {
 			this.action.run();
-			Handler.this.onUpdate.run();
+			if (Handler.this.enableOnUpdate && Handler.this.onUpdate != null) {
+				Handler.this.onUpdate.run();
+			}
 		}
 	}
 
@@ -44,26 +48,32 @@ public abstract class Handler {
 
 	public abstract Package createPackage(int packageNumber);
 
-	public abstract void removePackages(Package[] packages);
+	public abstract void removePackages(Slot[] slots);
 
-	public abstract void listPackages(Package... packages);
+	public abstract void listPackages(Slot... slots);
 
 	public abstract void run();
-	
+
 	public void initialize() {}
-	
+
+	public final void runOnStart() {
+		if (this.enableOnStart && this.onStart != null) {
+			this.onStart.run();
+		}
+	}
+
 	public void setOnUpdate(Runnable action) {
 		this.onUpdate = action;
 	}
-	
+
 	public Runnable getOnUpdate() {
 		return this.onUpdate;
 	}
-	
+
 	public void setOnStart(Runnable action) {
 		this.onStart = action;
 	}
-	
+
 	public Runnable getOnStart() {
 		return this.onStart;
 	}

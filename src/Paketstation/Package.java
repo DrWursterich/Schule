@@ -5,7 +5,8 @@ public class Package {
 	private final String receiver;
 	private final int number;
 
-	public Package(String receiver, int number) throws IllegalArgumentException {
+	public Package(String receiver, int number)
+			throws IllegalArgumentException {
 		if (receiver == null) {
 			throw new IllegalArgumentException("Receiver cannot be null");
 		}
@@ -27,7 +28,7 @@ public class Package {
 			if (other == null || !(other instanceof Package)) {
 				return false;
 			}
-			Package otherPackage = ((Package)other);
+			final Package otherPackage = ((Package)other);
 			return this.number == otherPackage.number
 					&& this.receiver.equals(otherPackage.receiver);
 		} catch (NullPointerException e) {

@@ -18,11 +18,13 @@ public class ConsoleHandler extends Handler {
 	private void promptUser() {
 		this.handleOutput("Paketstation Menü");
 		for (int i=0;i<this.menuOptions.length;i++) {
-			this.handleOutput("(" + (i + 1) + ") " + this.menuOptions[i].getTitle());
+			this.handleOutput("(" + (i + 1) + ") "
+					+ this.menuOptions[i].getTitle());
 		}
 		int input = 0;
 		while (input <= 0 || input > this.menuOptions.length) {
-			this.handleOutput("Geben Sie die Zahl einer Aktion an, um diese auszuführen.");
+			this.handleOutput("Geben Sie die Zahl einer "
+					+ "Aktion an, um diese auszuführen.");
 			try {
 				input = Integer.parseInt(this.scanner.next());
 			} catch (NumberFormatException e) {}
@@ -39,25 +41,27 @@ public class ConsoleHandler extends Handler {
 	}
 
 	@Override
-	public void removePackages(Package[] packages) {
-		this.handleOutput("Geben Sie den Empfänger oder die Fachnummer an: ");
-		String toRemove = this.scanner.next();
+	public void removePackages(Slot[] slots) {
+		this.handleOutput("Geben Sie den Empfänger oder die Fachnummer an:");
+		final String toRemove = this.scanner.next();
 		int packageSlot = 0;
 		int amountRemoved = 0;
 		try {
 			packageSlot = Integer.parseInt(toRemove);
 		} catch (NumberFormatException e) {}
-		if (packageSlot > 0 && packageSlot <= packages.length) {
-			if (packages[packageSlot - 1] != null) {
-				packages[packageSlot -1] = null;
+		if (packageSlot > 0 && packageSlot <= slots.length) {
+			if (slots[packageSlot - 1].getPackage() != null) {
+				slots[packageSlot -1].setPackage(null);
 				amountRemoved++;
 			} else {
-				this.handleOutput("Das Fach " + packageSlot + " ist bereits leer");
+				this.handleOutput("Das Fach "
+						+ packageSlot + " ist bereits leer");
 			}
 		} else {
-			for (int i = packages.length-1;i>=0;i--) {
-				if (packages[i] != null && toRemove.equals(packages[i].getReceiver())) {
-					packages[i] = null;
+			for (int i = slots.length-1;i>=0;i--) {
+				if (slots[i].hasPackage() && toRemove.equals(
+							slots[i].getPackage().getReceiver())) {
+					slots[i].packageProperty().setValue(null);
 					amountRemoved++;
 				}
 			}
@@ -66,46 +70,64 @@ public class ConsoleHandler extends Handler {
 	}
 
 	@Override
-	public void listPackages(Package... packages) {
-		if (packages.length == 0) {
+	public void listPackages(Slot... slots) {
+		if (slots == null || slots.length == 0) {
 			return;
 		}
 
-		String numberHeader = "Nr.";
-		String receiverHeader = "Empfänger";
-		String packageNumberHeader = "Id";
+		final String numberHeader = "Nr.";
+		final String receiverHeader = "Empfänger";
+		final String packageNumberHeader = "Id";
 
-		int indexDigits = Math.max((int)Math.log10(packages.length), numberHeader.length());
-		int receiverLength = Math.max(Package.MAX_RECEIVER_LENGTH, receiverHeader.length());
-		int packageNumberDigits = Math.max((int)Math.log10(PackageStation.getPackageNumber()), packageNumberHeader.length());
+		final int indexDigits = Math.max(
+				(int)Math.log10(slots.length),
+				numberHeader.length());
+		final int receiverLength = Math.max(
+				Package.MAX_RECEIVER_LENGTH,
+				receiverHeader.length());
+		final int packageNumberDigits = Math.max(
+				(int)Math.log10(PackageStation.getPackageNumber()),
+				packageNumberHeader.length());
 
-		String formatString = "%" + indexDigits + "d│%" + receiverLength + "s│%" + packageNumberDigits + "d";
-		String textFormatString = formatString.replace('d', 's');
+		final String formatString = "%" + indexDigits + "d│%"
+				+ receiverLength + "s│%" + packageNumberDigits + "d";
+		final String textFormatString = formatString.replace('d', 's');
 
-		this.handleOutput(String.format(textFormatString, numberHeader, receiverHeader, packageNumberHeader));
+		this.handleOutput(String.format(
+				textFormatString,
+				numberHeader,
+				receiverHeader,
+				packageNumberHeader));
 		this.handleOutput(String.join(
 				"┼",
-				String.join("", Collections.nCopies(indexDigits, "─")),
-				String.join("", Collections.nCopies(receiverLength, "─")),
-				String.join("", Collections.nCopies(packageNumberDigits, "─"))));
+				String.join("",
+						Collections.nCopies(indexDigits, "─")),
+				String.join("",
+						Collections.nCopies(receiverLength, "─")),
+				String.join("",
+						Collections.nCopies(packageNumberDigits, "─"))));
 
-		for (int i=0;i<packages.length;i++) {
+		for (int i=0;i<slots.length;i++) {
+			Package value = slots[i].getPackage();
 			this.handleOutput(String.format(
-					packages[i] != null ? formatString : textFormatString,
+					slots[i].hasPackage() ? formatString : textFormatString,
 					i + 1,
-					packages[i] != null ? packages[i].getReceiver() : "-",
-					packages[i] != null ? packages[i].getNumber() : "-"));
+					slots[i].hasPackage() ? value.getReceiver() : "-",
+					slots[i].hasPackage() ? value.getNumber() : "-"));
 		}
 	}
-	
+
 	@Override
 	public void initialize() {
-		this.setOnUpdate(this::promptUser);
+		this.enableOnUpdate = false;
+		this.enableOnStart = false;
 	}
 
 	@Override
 	public void run() {
-		this.promptUser();
+		while (true) {
+			this.promptUser();
+		}
 	}
 
 	@Override

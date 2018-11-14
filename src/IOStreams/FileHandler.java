@@ -148,6 +148,27 @@ public class FileHandler {
 		FileHandler.writeToFile(builder.toString(), new File(filename));
 	}
 	
+	public static String getAllLines(File file) throws IOException {
+		final StringBuilder output = new StringBuilder();
+		BufferedReader reader = null;
+		try {
+			reader = new BufferedReader(new FileReader(file));
+			String line = null;
+			boolean isFirst = true;
+			while ((line = reader.readLine()) != null) {
+				output.append((isFirst
+							? System.lineSeparator() 
+							: "")
+						+ line);
+			}
+		} catch (IOException e) {
+			throw e;
+		} finally {
+			reader.close();
+		}
+		return output.toString();
+	}
+	
 	public static String getEveryThirdLine(File file) throws IOException {
 		final StringBuilder output = new StringBuilder();
 		BufferedReader reader = null;

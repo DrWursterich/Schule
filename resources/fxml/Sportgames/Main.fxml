@@ -3,87 +3,110 @@
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.cell.PropertyValueFactory?>
 <?import javafx.collections.FXCollections?>
 <?import Sportgames.application.VereinCellFactory?>
 
-<VBox fx:id="root" maxHeight="1.7976931348623157E308"
-	maxWidth="1.7976931348623157E308" prefHeight="320.0" prefWidth="400.0"
-	xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-	fx:controller="Sportgames.controller.MainController">
+<VBox fx:id="root"
+		maxHeight="1.7976931348623157E308"
+		maxWidth="1.7976931348623157E308"
+		prefHeight="320.0"
+		prefWidth="400.0"
+		xmlns="http://javafx.com/javafx/8"
+		xmlns:fx="http://javafx.com/fxml/1"
+		fx:controller="Sportgames.controller.MainController">
 	<children>
 		<MenuBar>
 			<menus>
 				<Menu mnemonicParsing="false" text="File">
 					<items>
-						<MenuItem fx:id="menuOpen" mnemonicParsing="false"
-							onAction="#open" text="Open" />
-						<MenuItem fx:id="menuSave" mnemonicParsing="false"
-							onAction="#save" text="Save" />
-						<MenuItem fx:id="menuSaveAs" mnemonicParsing="false"
-							onAction="#saveAs" text="Save as" />
+						<MenuItem fx:id="menuOpen"
+								mnemonicParsing="false"
+								onAction="#open" text="Open" />
+						<MenuItem fx:id="menuSave"
+								mnemonicParsing="false"
+								onAction="#save"
+								text="Save" />
+						<MenuItem fx:id="menuSaveAs"
+								mnemonicParsing="false"
+								onAction="#saveAs"
+								text="Save as" />
 						<SeparatorMenuItem mnemonicParsing="false" />
-						<MenuItem fx:id="menuClose" mnemonicParsing="false"
-							onAction="#close" text="Close" />
+						<MenuItem fx:id="menuClose"
+								mnemonicParsing="false"
+								onAction="#close"
+								text="Close" />
 					</items>
 				</Menu>
-				<Menu mnemonicParsing="false" text="Edit">
+				<Menu mnemonicParsing="false"
+						text="Edit">
 					<items>
 						<MenuItem fx:id="menuAssociations"
-							onAction="#associations" mnemonicParsing="false"
-							text="Associations" />
+								onAction="#associations"
+								mnemonicParsing="false"
+								text="Associations" />
 					</items>
 				</Menu>
-				<Menu mnemonicParsing="false" text="Help">
+				<Menu mnemonicParsing="false"
+						text="Help">
 					<items>
-						<MenuItem mnemonicParsing="false" text="About" />
+						<MenuItem mnemonicParsing="false"
+								text="About" />
 					</items>
 				</Menu>
 			</menus>
 		</MenuBar>
 		<TabPane maxHeight="1.7976931348623157E308"
-			maxWidth="1.7976931348623157E308" tabClosingPolicy="UNAVAILABLE"
-			VBox.vgrow="ALWAYS">
+				maxWidth="1.7976931348623157E308"
+				tabClosingPolicy="UNAVAILABLE"
+				VBox.vgrow="ALWAYS">
 			<tabs>
 				<Tab text="Tabelle">
 					<content>
-						<TableView fx:id="table" layoutX="45.0"
-							maxHeight="1.7976931348623157E308"
-							maxWidth="1.7976931348623157E308">
+						<TableView fx:id="table"
+								layoutX="45.0"
+								maxHeight="1.7976931348623157E308"
+								maxWidth="1.7976931348623157E308">
 							<columns>
 								<TableColumn maxWidth="1.7976931348623157E308"
-									prefWidth="65.0" text="Verein">
+										prefWidth="65.0"
+										text="Verein">
 									<cellValueFactory>
 										<PropertyValueFactory property="name" />
 									</cellValueFactory>
 								</TableColumn>
-								<TableColumn fx:id="pointsColumn" maxWidth="1.7976931348623157E308"
-									prefWidth="65.0" text="Punkte">
+								<TableColumn fx:id="pointsColumn"
+										maxWidth="1.7976931348623157E308"
+										prefWidth="65.0"
+										text="Punkte">
 									<cellFactory>
 										<VereinCellFactory defaultString="0"/>
 									</cellFactory>
 								</TableColumn>
 								<TableColumn maxWidth="1.7976931348623157E308"
-									prefWidth="65.0" text="Spiele">
+										prefWidth="65.0"
+										text="Spiele">
 									<cellFactory>
 										<VereinCellFactory defaultString="0" />
 									</cellFactory>
 								</TableColumn>
 								<TableColumn maxWidth="1.7976931348623157E308"
-									prefWidth="65.0" text="Siege">
+										prefWidth="65.0"
+										text="Siege">
 									<cellFactory>
 										<VereinCellFactory defaultString="0" />
 									</cellFactory>
 								</TableColumn>
 								<TableColumn maxWidth="1.7976931348623157E308"
-									prefWidth="65.0" text="Niederlagen">
+										prefWidth="65.0"
+										text="Niederlagen">
 									<cellFactory>
 										<VereinCellFactory defaultString="0" />
 									</cellFactory>
 								</TableColumn>
 								<TableColumn maxWidth="1.7976931348623157E308"
-									prefWidth="65.0" text="Unentschieden">
+										prefWidth="65.0"
+										text="Unentschieden">
 									<cellFactory>
 										<VereinCellFactory defaultString="0" />
 									</cellFactory>
@@ -99,7 +122,13 @@
 						</TableView>
 					</content>
 				</Tab>
-				<Tab text="Spiele" />
+				<Tab text="Spiele">
+					<content>
+						<ScrollPane>
+							<VBox fx:id="pairingsPane"/>
+						</ScrollPane>
+					</content>
+				</Tab>
 			</tabs>
 		</TabPane>
 	</children>

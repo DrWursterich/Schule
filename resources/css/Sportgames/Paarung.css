@@ -1,0 +1,6 @@
+
+.root {
+	-fx-stroke: black;
+	-fx-stroke-width: 3;
+	-fx-fx-stroke-line-cap: butt;
+}

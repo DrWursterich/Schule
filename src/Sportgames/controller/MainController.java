@@ -8,15 +8,20 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Optional;
+
 import Sportgames.Verein;
+import Sportgames.application.Paarung;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import resource.ResourceManager;
 
@@ -35,16 +40,17 @@ public class MainController {
 	private MenuItem menuAssociations;
 	@FXML
 	private TableView<Verein> table;
+	@FXML
+	private VBox pairingsPane;
+	@FXML
 	private final ObservableList<Verein> associations =
 			FXCollections.observableArrayList();
 	private File lastSaved;
+	private final ArrayList<Paarung> pairings = new ArrayList<>();
 
 	public void initialize() {
 		this.table.setItems(this.associations);
-	}
-
-	public void addAssociations(final Verein...vereine) {
-		this.associations.addAll(vereine);
+		this.generatePairings();
 	}
 
 	public void open() {
@@ -53,7 +59,7 @@ public class MainController {
 		fileChooser.setInitialDirectory(
 				this.lastSaved != null
 					? this.lastSaved.getParentFile()
-					: new File(ResourceManager.projectPath()));
+					: new File(System.getProperty("user.dir")));
 		fileChooser.setInitialFileName(
 				this.lastSaved != null
 					? this.lastSaved.getName()
@@ -95,14 +101,13 @@ public class MainController {
 	public void saveAs() {
 		final FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Save File As");
-		fileChooser.setInitialDirectory(
-				this.lastSaved != null
-					? this.lastSaved.getParentFile()
-					: new File(ResourceManager.projectPath()));
-		fileChooser.setInitialFileName(
-				this.lastSaved != null
-					? this.lastSaved.getName()
-					: "");
+		if (this.lastSaved != null) {
+			fileChooser.setInitialDirectory(this.lastSaved.getParentFile());
+			fileChooser.setInitialFileName(this.lastSaved.getName());
+		} else {
+			fileChooser.setInitialDirectory(
+					new File(System.getProperty("user.dir")));
+		}
 		this.store(fileChooser.showSaveDialog(null));
 	}
 
@@ -117,8 +122,9 @@ public class MainController {
 						"Sportgames.Associations",
 						AssociationsController.class);
 			final Optional<List<Verein>> result = controller.showAndWait();
-			if (result.isPresent()) {
+			if (result != null && result.isPresent()) {
 				this.associations.setAll(result.get());
+				this.generatePairings();
 			}
 		} catch (final IOException e) {
 			e.printStackTrace();
@@ -127,6 +133,9 @@ public class MainController {
 	}
 
 	protected void store(final File file) {
+		if (file == null) {
+			return;
+		}
 		ObjectOutputStream output = null;
 		try {
 			if (!file.exists()) {
@@ -150,5 +159,25 @@ public class MainController {
 				output.close();
 			} catch (final NullPointerException | IOException e) {}
 		}
+	}
+
+	private void generatePairings() {
+		this.pairings.clear();
+		for (Verein firstTeam : this.associations) {
+			for (Verein secondTeam : this.associations) {
+				if (!firstTeam.equals(secondTeam)) {
+					this.pairings.add(new Paarung(
+							"location",
+							new GregorianCalendar(),
+							firstTeam,
+							secondTeam));
+				}
+			}
+		}
+		this.updatePairingsPane();
+	}
+
+	private void updatePairingsPane() {
+		this.pairingsPane.getChildren().setAll(this.pairings);
 	}
 }

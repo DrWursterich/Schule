@@ -6,19 +6,26 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.cell.PropertyValueFactory?>
 <?import javafx.collections.FXCollections?>
-<?import Sportgames.application.VereinCellFactory?>
 
-<ListView fx:id="list"
-		xmlns="http://javafx.com/javafx/8" 
+<HBox fx:id="root"
+		xmlns="http://javafx.com/javafx/8"
 		xmlns:fx="http://javafx.com/fxml/1"
-		minHeight="100"
-		minWidth="100"
-		maxHeight="1.7976931348623157E308"
-		maxWidth="1.7976931348623157E308"
-		fx:controller="Sportgames.controller.AssociationsController">
-	
-	<items>
-		<FXCollections fx:factory="observableArrayList">
-		</FXCollections>
-	</items>
-</ListView>
+		fx:controller="Sportgames.controller.AssociationsController"
+		spacing="10">
+	<ListView fx:id="list"
+			minHeight="100"
+			minWidth="100"
+			maxHeight="1.7976931348623157E308"
+			maxWidth="1.7976931348623157E308">
+		<items>
+			<FXCollections fx:factory="observableArrayList">
+			</FXCollections>
+		</items>
+	</ListView>
+	<VBox spacing="10">
+		<Button text="Add" prefWidth="100">
+		</Button>
+		<Button text="Delete" prefWidth="100">
+		</Button>
+	</VBox>
+</HBox>

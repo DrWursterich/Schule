@@ -31,9 +31,9 @@ public class AssociationsController extends Dialog<List<Verein>> {
 		});
 		this.list.setEditable(true);
 		this.list.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-		this.setHeaderText("If Changes are saved, Team-Pairings will be reset!");
+		this.setHeaderText("If Changes are saved, Team-Pairings will reset!");
 		this.initModality(Modality.WINDOW_MODAL);
-		this.getDialogPane().setContent(root);
+		this.getDialogPane().setContent(this.root);
 	}
 
 	public AssociationsController() {

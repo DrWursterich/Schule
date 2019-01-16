@@ -65,7 +65,10 @@ public class MainController {
 					? this.lastSaved.getName()
 					: "");
 		final File file = fileChooser.showOpenDialog(null);
-		if (file == null || !file.exists() || file.isDirectory()) {
+		if (file == null) {
+			return;
+		}
+		if (!file.exists() || file.isDirectory()) {
 			System.out.println("unable to load file");
 			return;
 		}

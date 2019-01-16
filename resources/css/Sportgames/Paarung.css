@@ -1,6 +1,19 @@
 
-.root {
+* {
+	-fx-primary-color: #CCFF99;
+}
+
+#root {
 	-fx-stroke: black;
 	-fx-stroke-width: 3;
 	-fx-fx-stroke-line-cap: butt;
+	-fx-background-color: -fx-primary-color;
+}
+
+#root:hover {
+	-fx-background-color: derive(-fx-primary-color, 15%);
+}
+
+#root:focused {
+	-fx-background-color: derive(-fx-primary-color, -15%);
 }

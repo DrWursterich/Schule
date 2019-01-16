@@ -125,7 +125,8 @@
 				<Tab text="Spiele">
 					<content>
 						<ScrollPane>
-							<VBox fx:id="pairingsPane"/>
+							<VBox fx:id="pairingsPane"
+									spacing="10"/>
 						</ScrollPane>
 					</content>
 				</Tab>

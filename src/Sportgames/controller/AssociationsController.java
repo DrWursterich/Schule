@@ -1,7 +1,6 @@
 package Sportgames.controller;
 
 import java.util.List;
-
 import Sportgames.Verein;
 import javafx.fxml.FXML;
 import javafx.scene.control.ButtonType;

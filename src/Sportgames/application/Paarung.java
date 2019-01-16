@@ -1,17 +1,16 @@
 package Sportgames.application;
 
-import java.io.IOException;
 import java.util.GregorianCalendar;
 import Sportgames.Verein;
 import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.util.Pair;
 import resource.ResourceManager;
-import resource.ResourceType;
 
 public class Paarung extends HBox {
 
@@ -61,7 +60,7 @@ public class Paarung extends HBox {
 	private final TeamStatistic secondTeam;
 	private final String location;
 	private final GregorianCalendar date;
-	private State state;
+	private final State state;
 	@FXML
 	private Label firstTeamLabel;
 	@FXML
@@ -74,28 +73,58 @@ public class Paarung extends HBox {
 			final GregorianCalendar date,
 			final Verein firstTeam,
 			final Verein secondTeam) {
+		ResourceManager.initResource(this, "Sportgames.Paarung", true);
 		this.location = location;
 		this.date = (GregorianCalendar)date.clone();
 		this.firstTeam = new TeamStatistic(firstTeam);
 		this.secondTeam = new TeamStatistic(secondTeam);
 		this.state = State.NOT_STARTED;
-		FXMLLoader loader = new FXMLLoader(
-				ResourceManager.loadURL(
-					ResourceType.FXML,
-					"Sportgames.Paarung"));
-		loader.setRoot(this);
-		loader.setController(this);
-		try {
-			loader.load();
-			this.getStylesheets().add(
-					ResourceManager.loadURL(
-						ResourceType.CSS,
-						"Sportgames.Paarung").toExternalForm());
-		} catch(IOException e) {
-			throw new RuntimeException(e);
-		}
 		this.firstTeamLabel.setText(this.getFirstTeam().getName());
 		this.secondTeamLabel.setText(this.getSecondTeam().getName());
+		this.setFocusTraversable(true);
+		this.setOnMouseClicked(e -> {
+			this.requestFocus();
+			if (e.getClickCount() == 2) {
+				this.edit();
+			}
+		});
+		this.setOnKeyPressed(e -> {
+			switch (e.getCode()) {
+				case ENTER:
+					this.edit();
+					break;
+				case DOWN:
+					this.fireEvent(
+							new KeyEvent(
+								this,
+								this,
+								KeyEvent.KEY_PRESSED,
+								"",
+								"",
+								KeyCode.TAB,
+								false,
+								false,
+								false,
+								false));
+					break;
+				case UP:
+					this.fireEvent(
+							new KeyEvent(
+								this,
+								this,
+								KeyEvent.KEY_PRESSED,
+								"",
+								"",
+								KeyCode.TAB,
+								true,
+								false,
+								false,
+								false));
+					break;
+				default:
+					break;
+			}
+		});
 	}
 
 	public String getLocation() {
@@ -128,6 +157,10 @@ public class Paarung extends HBox {
 
 	public State getState() {
 		return this.state;
+	}
+
+	public void edit() {
+		System.out.println("editing");
 	}
 
 	@Override

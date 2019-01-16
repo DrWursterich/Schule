@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.VBox?>
 
 <fx:root type="javafx.scene.layout.HBox"
-		fx:id="root"
+		id="root"
 		maxHeight="1.7976931348623157E308"
 		maxWidth="1.7976931348623157E308"
 		prefHeight="40.0"

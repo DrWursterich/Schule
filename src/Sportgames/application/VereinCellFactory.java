@@ -7,7 +7,7 @@ import javafx.util.Callback;
 
 public class VereinCellFactory implements
 		Callback<TableColumn<Object, Object>, TableCell<Object, Object>> {
-	private String defaultString = " - ";
+	private String defaultString = "";
 
 	@Override
 	public TableCell<Object, Object> call(

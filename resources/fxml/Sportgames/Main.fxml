@@ -22,20 +22,20 @@
 					<items>
 						<MenuItem fx:id="menuOpen"
 								mnemonicParsing="false"
-								onAction="#open" text="Open" />
+								onAction="#open" text="Open"/>
 						<MenuItem fx:id="menuSave"
 								mnemonicParsing="false"
 								onAction="#save"
-								text="Save" />
+								text="Save"/>
 						<MenuItem fx:id="menuSaveAs"
 								mnemonicParsing="false"
 								onAction="#saveAs"
-								text="Save as" />
-						<SeparatorMenuItem mnemonicParsing="false" />
+								text="Save as"/>
+						<SeparatorMenuItem mnemonicParsing="false"/>
 						<MenuItem fx:id="menuClose"
 								mnemonicParsing="false"
 								onAction="#close"
-								text="Close" />
+								text="Close"/>
 					</items>
 				</Menu>
 				<Menu mnemonicParsing="false"
@@ -44,14 +44,14 @@
 						<MenuItem fx:id="menuAssociations"
 								onAction="#associations"
 								mnemonicParsing="false"
-								text="Associations" />
+								text="Associations"/>
 					</items>
 				</Menu>
 				<Menu mnemonicParsing="false"
 						text="Help">
 					<items>
 						<MenuItem mnemonicParsing="false"
-								text="About" />
+								text="About"/>
 					</items>
 				</Menu>
 			</menus>
@@ -72,50 +72,59 @@
 										prefWidth="65.0"
 										text="Verein">
 									<cellValueFactory>
-										<PropertyValueFactory property="name" />
+										<PropertyValueFactory property="name"/>
 									</cellValueFactory>
 								</TableColumn>
 								<TableColumn fx:id="pointsColumn"
 										maxWidth="1.7976931348623157E308"
 										prefWidth="65.0"
 										text="Punkte">
-									<cellFactory>
-										<VereinCellFactory defaultString="0"/>
-									</cellFactory>
+									<cellValueFactory>
+										<PropertyValueFactory property="points"/>
+									</cellValueFactory>
 								</TableColumn>
 								<TableColumn maxWidth="1.7976931348623157E308"
 										prefWidth="65.0"
 										text="Spiele">
-									<cellFactory>
-										<VereinCellFactory defaultString="0" />
-									</cellFactory>
+									<cellValueFactory>
+										<PropertyValueFactory property="games"/>
+									</cellValueFactory>
 								</TableColumn>
 								<TableColumn maxWidth="1.7976931348623157E308"
 										prefWidth="65.0"
 										text="Siege">
-									<cellFactory>
-										<VereinCellFactory defaultString="0" />
-									</cellFactory>
+									<cellValueFactory>
+										<PropertyValueFactory property="victories"/>
+									</cellValueFactory>
 								</TableColumn>
 								<TableColumn maxWidth="1.7976931348623157E308"
 										prefWidth="65.0"
 										text="Niederlagen">
-									<cellFactory>
-										<VereinCellFactory defaultString="0" />
-									</cellFactory>
+									<cellValueFactory>
+										<PropertyValueFactory property="losses"/>
+									</cellValueFactory>
 								</TableColumn>
 								<TableColumn maxWidth="1.7976931348623157E308"
 										prefWidth="65.0"
 										text="Unentschieden">
-									<cellFactory>
-										<VereinCellFactory defaultString="0" />
-									</cellFactory>
+									<cellValueFactory>
+										<PropertyValueFactory property="draws"/>
+									</cellValueFactory>
 								</TableColumn>
 							</columns>
 							<items>
 								<FXCollections fx:factory="observableArrayList">
 								</FXCollections>
 							</items>
+							<placeholder>
+								<VBox id="tablePlaceholder"
+										HBox.hgrow="ALWAYS"
+										VBox.vgrow="ALWAYS">
+									<Label text="There are no Associations yet."/>
+									<Button text="Edit Associations"
+											onAction="#associations"/>
+								</VBox>
+							</placeholder>
 							<sortOrder>
 								<fx:reference source="pointsColumn"/>
 							</sortOrder>
@@ -126,6 +135,7 @@
 					<content>
 						<ScrollPane>
 							<VBox fx:id="pairingsPane"
+									id="pairingsPane"
 									spacing="10"/>
 						</ScrollPane>
 					</content>

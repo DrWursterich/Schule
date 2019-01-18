@@ -1,5 +1,10 @@
 package Sportgames.application;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import Sportgames.Verein;
 import Sportgames.controller.MainController;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -25,13 +30,36 @@ public class Main extends Application {
 		this.stage = stage;
 		stage.setScene(
 				new Scene(ResourceManager.getResource("Sportgames.Main")));
-		final MainController mainController = ResourceManager.getController(
-				"Sportgames.Main", MainController.class);
 		stage.setTitle("Sportgames");
 		stage.show();
 	}
 
 	public Stage getStage() {
 		return this.stage;
+	}
+
+	public List<Verein> getAssociations() {
+		try {
+			return ResourceManager.getController(
+					"Sportgames.Main", MainController.class).getAssociations();
+		} catch (final IOException e) {
+			return new ArrayList<>();
+		}
+	}
+
+	public List<Paarung> getPairings() {
+		try {
+			return ResourceManager.getController(
+					"Sportgames.Main", MainController.class).getPairings();
+		} catch (final IOException e) {
+			return new ArrayList<>();
+		}
+	}
+
+	public void refreshTable() {
+		try {
+			ResourceManager.getController(
+					"Sportgames.Main", MainController.class).refreshTable();
+		} catch (final IOException e) {}
 	}
 }

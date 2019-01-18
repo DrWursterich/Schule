@@ -1,3 +1,9 @@
-/*
- * Not yet used
- */
+
+#tablePlaceholder {
+	-fx-alignment: center;
+	-fx-spacing: 5;
+}
+
+#pairingsPane {
+	-fx-padding: 10
+}

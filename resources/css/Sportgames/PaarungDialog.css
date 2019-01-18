@@ -1,0 +1,21 @@
+
+#root {
+	-fx-padding: 10;
+}
+
+HBox, VBox {
+	-fx-spacing: 10;
+	-fx-alignment: center;
+}
+
+#buttonBox {
+	-fx-padding: 15 5 5 5;
+	-fx-border-color: #a5a5a5;
+	-fx-border-width: 1 0 0 0;
+	-fx-border-insets: 10 0 0 0;
+}
+
+Label {
+	-fx-font-size: 14pt;
+	-fx-alignment: center;
+}

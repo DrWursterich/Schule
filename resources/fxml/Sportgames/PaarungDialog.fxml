@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.collections.FXCollections?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Button?>
+<?import Sportgames.application.NumberField?>
+<?import resource.fxml.EnumLoader?>
+<?import javafx.scene.layout.Region?>
+
+<VBox fx:id="root"
+		xmlns="http://javafx.com/javafx/8"
+		xmlns:fx="http://javafx.com/fxml/1">
+	<HBox>
+		<Label fx:id="firstTeamLabel"
+				prefWidth="140"/>
+		<Region HBox.hgrow="ALWAYS"/>
+		<NumberField fx:id="firstTeamGoals"
+				minValue="0"
+				value="0"
+				prefWidth="35"/>
+		<Label text=":"/>
+		<NumberField fx:id="secondTeamGoals"
+				minValue="0"
+				value="0"
+				prefWidth="35"/>
+		<Label fx:id="secondTeamLabel"
+				prefWidth="140"/>
+		<Region HBox.hgrow="ALWAYS"/>
+		<ComboBox fx:id="stateBox">
+			<items>
+				<FXCollections fx:factory="observableArrayList"
+						EnumLoader.enumClass="Sportgames.PairingState"/>
+			</items>
+		</ComboBox>
+	</HBox>
+	<HBox>
+		<TextField fx:id="locationField"/>
+		<Region HBox.hgrow="ALWAYS"/>
+		<DatePicker fx:id="datePicker"/>
+		<Region HBox.hgrow="ALWAYS"/>
+		<NumberField fx:id="hoursField"
+				promptText="Hours"
+				minValue="0"
+				maxValue="23"
+				prefWidth="35"/>
+		<Label text=":"/>
+		<NumberField fx:id="minutesField"
+				promptText="Minuten"
+				minValue="0"
+				maxValue="59"
+				prefWidth="35"/>
+	</HBox>
+	<HBox id="buttonBox">
+		<Button text="Abbrechen"
+				onAction="#close"/>
+		<Region HBox.hgrow="ALWAYS"/>
+		<Button text="Übernehmen"
+				onAction="#apply"/>
+	</HBox>
+</VBox>

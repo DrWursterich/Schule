@@ -1,18 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
 
-<fx:root type="javafx.scene.layout.HBox"
+<fx:root type="javafx.scene.layout.VBox"
 		id="root"
 		maxHeight="1.7976931348623157E308"
 		maxWidth="1.7976931348623157E308"
 		prefHeight="40.0"
-		prefWidth="400.0"
+		prefWidth="300.0"
 		xmlns="http://javafx.com/javafx/8"
-		xmlns:fx="http://javafx.com/fxml/1"
-		spacing="4">
-	<Label fx:id="firstTeamLabel"></Label>
-	<Label fx:id="separatorlabel" text=":"></Label>
-	<Label fx:id="secondTeamLabel"></Label>
+		xmlns:fx="http://javafx.com/fxml/1">
+	<HBox>
+		<Label fx:id="firstTeamLabel"
+				prefWidth="100"/>
+		<HBox id="scoreBox">
+			<Label fx:id="firstTeamGoals"/>
+			<Label styleClass="separatorLabel" text=":"/>
+			<Label fx:id="secondTeamGoals"/>
+		</HBox>
+		<Label fx:id="secondTeamLabel"
+				prefWidth="100"/>
+	</HBox>
+	<HBox>
+		<Label fx:id="locationLabel"/>
+		<Label fx:id="dateLabel"/>
+	</HBox>
 </fx:root>

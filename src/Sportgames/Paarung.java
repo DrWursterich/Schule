@@ -1,14 +1,13 @@
-package Sportgames.application;
+package Sportgames;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
-
-import Sportgames.PairingState;
-import Sportgames.Verein;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.StringExpression;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -101,10 +100,10 @@ public class Paarung extends VBox implements Serializable {
 		this.firstTeamLabel.setText(this.getFirstTeam().getName());
 		this.secondTeamLabel.setText(this.getSecondTeam().getName());
 		this.firstTeamGoals.textProperty().bind(
-				StringProperty.stringExpression(
+				StringExpression.stringExpression(
 					this.firstTeam.goalsProperty()));
 		this.secondTeamGoals.textProperty().bind(
-				StringProperty.stringExpression(
+				StringExpression.stringExpression(
 					this.secondTeam.goalsProperty()));
 		this.locationLabel.textProperty().bind(this.location);
 		this.dateLabel.textProperty().bind(
@@ -112,11 +111,11 @@ public class Paarung extends VBox implements Serializable {
 					() -> String.format(
 						"%s %02d.%02d.%04d at %02d:%02d",
 						this.state.get().getLabel(),
-						this.date.get().get(GregorianCalendar.DATE),
-						this.date.get().get(GregorianCalendar.MONTH) + 1,
-						this.date.get().get(GregorianCalendar.YEAR),
-						this.date.get().get(GregorianCalendar.HOUR_OF_DAY),
-						this.date.get().get(GregorianCalendar.MINUTE)),
+						this.date.get().get(Calendar.DATE),
+						this.date.get().get(Calendar.MONTH) + 1,
+						this.date.get().get(Calendar.YEAR),
+						this.date.get().get(Calendar.HOUR_OF_DAY),
+						this.date.get().get(Calendar.MINUTE)),
 					this.state,
 					this.date));
 		this.firstTeam.goalsProperty.addListener(e -> this.updateColors());
@@ -263,6 +262,8 @@ public class Paarung extends VBox implements Serializable {
 		final GregorianCalendar date = (GregorianCalendar)stream.readObject();
 		final PairingState state = (PairingState)stream.readObject();
 		this.initialize(location, date, firstTeam, secondTeam);
+		this.setFirstTeamGoals(firstTeamGoals);
+		this.setSecondTeamGoals(secondTeamGoals);
 		this.setState(state);
 	}
 

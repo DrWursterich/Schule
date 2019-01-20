@@ -1,17 +1,13 @@
-package Sportgames.application;
+package Sportgames;
 
 import java.io.IOException;
 import java.util.List;
-
-import Sportgames.Verein;
 import javafx.fxml.FXML;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
@@ -30,7 +26,13 @@ public class AssociationsDialog extends Dialog<List<Verein>> {
 						this.cancelEdit();
 						break;
 					case ENTER:
-						this.commitEdit(new Verein(this.textField.getText()));
+						if (AssociationsDialog.this.listContainsAssociationName(
+								this.textField.getText())) {
+							this.cancelEdit();
+						} else {
+							this.commitEdit(
+									new Verein(this.textField.getText()));
+						}
 						break;
 					default:
 						break;
@@ -43,7 +45,8 @@ public class AssociationsDialog extends Dialog<List<Verein>> {
 		protected void updateItem(Verein item, boolean empty) {
 			super.updateItem(item, empty);
 			if (this.isEditing()) {
-				this.textField.setText(item == null || empty ? "" : item.getName());
+				this.textField.setText(
+						item == null || empty ? "" : item.getName());
 				this.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
 			} else {
 				this.setText(item == null || empty ? "" : item.getName());
@@ -63,7 +66,8 @@ public class AssociationsDialog extends Dialog<List<Verein>> {
 		@Override
 		public void cancelEdit() {
 			super.cancelEdit();
-			this.setText(this.getItem() != null ? this.getItem().getName() : "");
+			this.setText(
+					this.getItem() != null ? this.getItem().getName() : "");
 			this.setContentDisplay(ContentDisplay.TEXT_ONLY);
 		}
 
@@ -118,10 +122,22 @@ public class AssociationsDialog extends Dialog<List<Verein>> {
 	}
 
 	public void add() {
-		final Verein team = new Verein("new Association");
+		final String baseName = "new Association";
+		int counter = 1;
+		String name = baseName;
+		while (this.listContainsAssociationName(name)) {
+			name = baseName + counter++;
+		}
+		final Verein team = new Verein(name);
 		this.list.getItems().add(team);
 		this.list.getSelectionModel().clearSelection();
 		this.list.getSelectionModel().select(team);
 		this.list.edit(this.list.getSelectionModel().getSelectedIndex());
+	}
+
+	private boolean listContainsAssociationName(final String name) {
+		return this.list.getItems().stream()
+				.filter(e -> name.equals(e.getName()))
+				.count() > 0;
 	}
 }

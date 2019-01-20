@@ -1,4 +1,4 @@
-package Sportgames.application;
+package Sportgames;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.IntegerProperty;

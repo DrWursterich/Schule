@@ -19,3 +19,7 @@ Label {
 	-fx-font-size: 14pt;
 	-fx-alignment: center;
 }
+
+.text-field {
+	-fx-alignment: center;
+}

@@ -17,7 +17,7 @@
 		xmlns:fx="http://javafx.com/fxml/1">
 	<HBox>
 		<Label fx:id="firstTeamLabel"
-				prefWidth="140"/>
+				prefWidth="160"/>
 		<Region HBox.hgrow="ALWAYS"/>
 		<NumberField fx:id="firstTeamGoals"
 				minValue="0"
@@ -29,7 +29,7 @@
 				value="0"
 				prefWidth="35"/>
 		<Label fx:id="secondTeamLabel"
-				prefWidth="140"/>
+				prefWidth="160"/>
 		<Region HBox.hgrow="ALWAYS"/>
 		<ComboBox fx:id="stateBox">
 			<items>

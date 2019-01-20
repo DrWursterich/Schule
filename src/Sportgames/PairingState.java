@@ -30,4 +30,10 @@ public enum PairingState implements Serializable {
 	public String toString() {
 		return this.name;
 	}
+
+	public boolean equals(PairingState that) {
+		return that != null
+				&& this.name.equals(that.name)
+				&& this.label.get().equals(that.label.get());
+	}
 }

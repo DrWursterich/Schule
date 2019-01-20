@@ -8,19 +8,19 @@
 		maxHeight="1.7976931348623157E308"
 		maxWidth="1.7976931348623157E308"
 		prefHeight="40.0"
-		prefWidth="300.0"
+		prefWidth="360.0"
 		xmlns="http://javafx.com/javafx/8"
 		xmlns:fx="http://javafx.com/fxml/1">
 	<HBox>
 		<Label fx:id="firstTeamLabel"
-				prefWidth="100"/>
+				prefWidth="130"/>
 		<HBox id="scoreBox">
 			<Label fx:id="firstTeamGoals"/>
 			<Label styleClass="separatorLabel" text=":"/>
 			<Label fx:id="secondTeamGoals"/>
 		</HBox>
 		<Label fx:id="secondTeamLabel"
-				prefWidth="100"/>
+				prefWidth="130"/>
 	</HBox>
 	<HBox>
 		<Label fx:id="locationLabel"/>

@@ -1,4 +1,4 @@
-package Sportgames.controller;
+package Sportgames;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -9,6 +9,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -16,34 +17,36 @@ import java.util.Optional;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
-
-import Sportgames.Verein;
-import Sportgames.application.AssociationsDialog;
-import Sportgames.application.Paarung;
+import javafx.application.Application;
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Stage;
+import resource.ResourceManager;
 
-public class MainController {
+public class Main extends Application {
 	private static final String FILE_NAME_TEAMS = "teams";
 	private static final String FILE_NAME_PAIRINGS = "pairings";
 	private static final String[] LOCATIONS = new String[] {
-					"Wembley-Stadion",
-					"Nationalstadion Peking",
-					"Rose Bowl Stadium",
-					"FNB-Stadion",
-					"Azadi-Stadion",
-					"Camp Nou",
-					"Melbourne Cricket Ground",
-					"Aztekenstadion",
-					"Yuba Bharati Krirangan",
-					"Stadion Erster Mai"};
+			"Wembley-Stadion",
+			"Nationalstadion Peking",
+			"Rose Bowl Stadium",
+			"FNB-Stadion",
+			"Azadi-Stadion",
+			"Camp Nou",
+			"Melbourne Cricket Ground",
+			"Aztekenstadion",
+			"Yuba Bharati Krirangan",
+			"Stadion Erster Mai"};
 	@FXML
 	private Pane root;
 	@FXML
@@ -59,16 +62,45 @@ public class MainController {
 	@FXML
 	private TableView<Verein> table;
 	@FXML
+	private ScrollPane scrollPane;
+	@FXML
 	private VBox pairingsPane;
 	@FXML
 	private final ObservableList<Verein> associations =
 			FXCollections.observableArrayList();
+	private static Main instance;
 	private File lastSaved;
 	private final ArrayList<Paarung> pairings = new ArrayList<>();
+
+	public static Main getInstance() {
+		return Main.instance;
+	}
+
+	public static void main(final String...args) {
+		ResourceManager.setResourcePath("resources");
+		Application.launch(args);
+	}
+
+	@Override
+	public void start(final Stage stage) throws Exception {
+		Main.instance = this;
+		stage.setScene(new Scene(
+				ResourceManager.loadNewResource("Sportgames.Main", this)));
+		stage.setTitle("Sportgames");
+		stage.show();
+	}
 
 	public void initialize() {
 		this.table.setItems(this.associations);
 		this.generatePairings();
+		this.pairingsPane.prefWidthProperty().bind(
+				Bindings.createDoubleBinding(() -> {
+					return this.scrollPane.getWidth()
+							- this.pairingsPane.getPadding().getLeft()
+							- this.pairingsPane.getPadding().getRight();
+				},
+				this.scrollPane.widthProperty(),
+				this.pairingsPane.paddingProperty()));
 	}
 
 	public void open() {
@@ -149,17 +181,18 @@ public class MainController {
 		try {
 			out = new ZipOutputStream(new FileOutputStream(file));
 			objOut = new ObjectOutputStream(new BufferedOutputStream(out));
-			out.putNextEntry(new ZipEntry(MainController.FILE_NAME_TEAMS));
+			out.putNextEntry(new ZipEntry(Main.FILE_NAME_TEAMS));
 			objOut.writeObject(this.associations.toArray(
 					new Verein[this.associations.size()]));
 			objOut.flush();
 			out.closeEntry();
-			out.putNextEntry(new ZipEntry(MainController.FILE_NAME_PAIRINGS));
+			out.putNextEntry(new ZipEntry(Main.FILE_NAME_PAIRINGS));
 			objOut2 = new ObjectOutputStream(new BufferedOutputStream(out));
 			objOut2.writeObject(this.pairings.toArray(
 					new Paarung[this.pairings.size()]));
 			objOut2.flush();
 			out.closeEntry();
+			this.lastSaved = file;
 		} catch (IOException e) {
 			System.out.println("An Error occoured, the File might be unsaved");
 			e.printStackTrace();
@@ -169,7 +202,8 @@ public class MainController {
 				objOut2.close();
 				out.close();
 			} catch (final IOException e) {
-				System.out.println("An Error occoured, the File might be unsaved");
+				System.out.println(
+						"An Error occoured, the File might be unsaved");
 			} catch (final NullPointerException e) {}
 		}
 	}
@@ -191,33 +225,45 @@ public class MainController {
 			final Enumeration<? extends ZipEntry> entries = zip.entries();
 			while(entries.hasMoreElements()) {
 				final ZipEntry entry = entries.nextElement();
-				if (MainController.FILE_NAME_TEAMS.equals(entry.getName())) {
-					foundTeams = true;
-					objIn = new ObjectInputStream(new BufferedInputStream(zip.getInputStream(entry)));
-					this.associations.setAll((Verein[])objIn.readObject());
-					objIn.close();
-				} else if (MainController.FILE_NAME_PAIRINGS.equals(entry.getName())) {
-					foundPairings = true;
-					objIn = new ObjectInputStream(new BufferedInputStream(zip.getInputStream(entry)));
-					this.pairings.clear();
-					this.pairings.addAll(Arrays.asList((Paarung[])objIn.readObject()));
-					this.updatePairingsPane();
-					objIn.close();
-				} else {
-					System.out.println(
-							"Found expendable File in Archive \""
-							+ entry.getName() + "\"");
+				switch (entry.getName()) {
+					case Main.FILE_NAME_TEAMS:
+						foundTeams = true;
+						objIn = new ObjectInputStream(
+								new BufferedInputStream(
+									zip.getInputStream(entry)));
+						this.associations.setAll((Verein[])objIn.readObject());
+						objIn.close();
+						break;
+					case Main.FILE_NAME_PAIRINGS:
+						foundPairings = true;
+						objIn = new ObjectInputStream(
+								new BufferedInputStream(
+									zip.getInputStream(entry)));
+						this.pairings.clear();
+						this.pairings.addAll(
+								Arrays.asList((Paarung[])objIn.readObject()));
+						this.updatePairingsPane();
+						objIn.close();
+						break;
+					default:
+						System.out.println(
+								"Found expendable File in Archive \""
+								+ entry.getName() + "\"");
+						break;
 				}
 			}
+			this.lastSaved = file;
 		} catch (final IOException | ClassNotFoundException e) {
-			System.out.println("An Error occoured, the File may have not been loaded");
+			System.out.println(
+					"An Error occoured, the File may have not been loaded");
 			e.printStackTrace();
 		} finally {
 			try {
 				objIn.close();
 				zip.close();
 			} catch (final IOException e) {
-				System.out.println("An Error occoured, the File may have not been loaded");
+				System.out.println(
+						"An Error occoured, the File may have not been loaded");
 			} catch (final NullPointerException e) {}
 		}
 		if (!foundTeams) {
@@ -235,17 +281,17 @@ public class MainController {
 			for (Verein secondTeam : this.associations) {
 				if (!firstTeam.equals(secondTeam)) {
 					this.pairings.add(new Paarung(
-							MainController.LOCATIONS[(int)(
+							Main.LOCATIONS[(int)(
 									Math.random()
-									* (MainController.LOCATIONS.length - 1))],
+									* (Main.LOCATIONS.length - 1))],
 							(GregorianCalendar)date.clone(),
 							firstTeam,
 							secondTeam));
 					date.add(
-							GregorianCalendar.DATE,
+							Calendar.DATE,
 							(int)(1 + Math.random() * 20));
 					date.add(
-							GregorianCalendar.HOUR_OF_DAY,
+							Calendar.HOUR_OF_DAY,
 							(int)(Math.random() * 8 - 4));
 				}
 			}

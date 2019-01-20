@@ -1,10 +1,9 @@
-package Sportgames.application;
+package Sportgames;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
-
-import Sportgames.PairingState;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
@@ -40,6 +39,7 @@ public class PaarungDialog extends Stage {
 
 	public PaarungDialog(final Paarung pairing) {
 		this.pairing = pairing;
+		this.setTitle("Edit Pairing");
 		this.initModality(Modality.WINDOW_MODAL);
 		try {
 			this.setScene(new Scene(ResourceManager.loadNewResource(
@@ -58,22 +58,22 @@ public class PaarungDialog extends Stage {
 		this.locationField.setText(this.pairing.getLocation());
 		final GregorianCalendar date = this.pairing.getDate();
 		this.datePicker.setValue(LocalDate.of(
-				date.get(GregorianCalendar.YEAR),
-				date.get(GregorianCalendar.MONTH) + 1,
-				date.get(GregorianCalendar.DATE)));
-		this.hoursField.setValue(date.get(GregorianCalendar.HOUR_OF_DAY));
-		this.minutesField.setValue(date.get(GregorianCalendar.MINUTE));
+				date.get(Calendar.YEAR),
+				date.get(Calendar.MONTH) + 1,
+				date.get(Calendar.DATE)));
+		this.hoursField.setValue(date.get(Calendar.HOUR_OF_DAY));
+		this.minutesField.setValue(date.get(Calendar.MINUTE));
 		this.stateBox.valueProperty().addListener((v, o , n) -> {
 			switch (n) {
 				case NOT_STARTED:
 					PaarungDialog.this.firstTeamGoals.setText("0");
 					PaarungDialog.this.secondTeamGoals.setText("0");
 					PaarungDialog.this.firstTeamGoals.setDisable(true);
-					PaarungDialog.this.firstTeamGoals.setDisable(true);
+					PaarungDialog.this.secondTeamGoals.setDisable(true);
 					break;
 				default:
 					PaarungDialog.this.firstTeamGoals.setDisable(false);
-					PaarungDialog.this.firstTeamGoals.setDisable(false);
+					PaarungDialog.this.secondTeamGoals.setDisable(false);
 					break;
 			}
 		});
@@ -83,7 +83,8 @@ public class PaarungDialog extends Stage {
 	public void apply() {
 		this.pairing.setFirstTeamGoals(this.firstTeamGoals.getValue());
 		this.pairing.setSecondTeamGoals(this.secondTeamGoals.getValue());
-		this.pairing.setState(this.stateBox.getSelectionModel().getSelectedItem());
+		this.pairing.setState(
+				this.stateBox.getSelectionModel().getSelectedItem());
 		this.pairing.setLocation(this.locationField.getText());
 		final LocalDate date = this.datePicker.getValue();
 		this.pairing.setDate(new GregorianCalendar(

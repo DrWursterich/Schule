@@ -4,14 +4,12 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-
-import Sportgames.application.Main;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class Verein implements Serializable {
 	private static final long serialVersionUID = 1020500889918654466L;
-	private  StringProperty name;
+	private StringProperty name;
 
 	protected Verein() {
 		this.name = new SimpleStringProperty();
@@ -33,8 +31,12 @@ public class Verein implements Serializable {
 							|| this.equals(e.getSecondTeam()))
 					? (e.getFirstTeamGoals() != e.getSecondTeamGoals()
 						? (this.equals(e.getFirstTeam())
-							? (e.getFirstTeamGoals() > e.getSecondTeamGoals() ? 3 : 0)
-							: (e.getFirstTeamGoals() > e.getSecondTeamGoals() ? 0 : 3))
+							? (e.getFirstTeamGoals() > e.getSecondTeamGoals()
+								? 3
+								: 0)
+							: (e.getFirstTeamGoals() > e.getSecondTeamGoals()
+								? 0
+								: 3))
 						: 1)
 					: 0).sum();
 	}
@@ -54,10 +56,14 @@ public class Verein implements Serializable {
 						&& (this.equals(e.getFirstTeam())
 							|| this.equals(e.getSecondTeam())
 						&& e.getFirstTeamGoals() != e.getSecondTeamGoals())
-							? (this.equals(e.getFirstTeam())
-								? (e.getFirstTeamGoals() > e.getSecondTeamGoals() ? 1 : 0)
-								: (e.getFirstTeamGoals() > e.getSecondTeamGoals() ? 0 : 1))
-							: 0).sum();
+					? (this.equals(e.getFirstTeam())
+						? (e.getFirstTeamGoals() > e.getSecondTeamGoals()
+							? 1
+							: 0)
+						: (e.getFirstTeamGoals() > e.getSecondTeamGoals()
+							? 0
+							: 1))
+					: 0).sum();
 	}
 
 	public int getLosses() {
@@ -66,10 +72,14 @@ public class Verein implements Serializable {
 						&& (this.equals(e.getFirstTeam())
 							|| this.equals(e.getSecondTeam())
 						&& e.getFirstTeamGoals() != e.getSecondTeamGoals())
-							? (this.equals(e.getFirstTeam())
-								? (e.getFirstTeamGoals() > e.getSecondTeamGoals() ? 0 : 1)
-								: (e.getFirstTeamGoals() > e.getSecondTeamGoals() ? 1 : 0))
-							: 0).sum();
+					? (this.equals(e.getFirstTeam())
+						? (e.getFirstTeamGoals() > e.getSecondTeamGoals()
+							? 0
+							: 1)
+						: (e.getFirstTeamGoals() > e.getSecondTeamGoals()
+							? 1
+							: 0))
+					: 0).sum();
 	}
 
 	public int getDraws() {
@@ -80,6 +90,15 @@ public class Verein implements Serializable {
 						&& e.getFirstTeamGoals() == e.getSecondTeamGoals()
 							? 1
 							: 0).sum();
+	}
+
+	@Override
+	public boolean equals(Object other) {
+		if (other == null || !(other instanceof Verein)) {
+			return false;
+		}
+		final Verein that = (Verein)other;
+		return this.name.get().equals(that.name.get());
 	}
 
 	@Override

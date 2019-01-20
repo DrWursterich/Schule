@@ -5,7 +5,6 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.cell.PropertyValueFactory?>
 <?import javafx.collections.FXCollections?>
-<?import Sportgames.application.VereinCellFactory?>
 
 <VBox fx:id="root"
 		maxHeight="1.7976931348623157E308"
@@ -13,8 +12,7 @@
 		prefHeight="320.0"
 		prefWidth="400.0"
 		xmlns="http://javafx.com/javafx/8"
-		xmlns:fx="http://javafx.com/fxml/1"
-		fx:controller="Sportgames.controller.MainController">
+		xmlns:fx="http://javafx.com/fxml/1">
 	<children>
 		<MenuBar>
 			<menus>
@@ -133,10 +131,9 @@
 				</Tab>
 				<Tab text="Spiele">
 					<content>
-						<ScrollPane>
+						<ScrollPane fx:id="scrollPane">
 							<VBox fx:id="pairingsPane"
-									id="pairingsPane"
-									spacing="10"/>
+									id="pairingsPane"/>
 						</ScrollPane>
 					</content>
 				</Tab>

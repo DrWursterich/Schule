@@ -4,6 +4,10 @@
 	-fx-spacing: 5;
 }
 
+TableView:focused {
+	-fx-focus-color: #b5b5b5;
+}
+
 #pairingsPane {
 	-fx-spacing: 10;
 	-fx-padding: 10;

@@ -14,7 +14,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import resource.ResourceManager;
 
-public class PaarungDialog extends Stage {
+public class PairingDialog extends Stage {
 	@FXML
 	private Label firstTeamLabel;
 	@FXML
@@ -35,17 +35,18 @@ public class PaarungDialog extends Stage {
 	private NumberField hoursField;
 	@FXML
 	private NumberField minutesField;
-	private Paarung pairing;
+	private Pairing pairing;
 
-	public PaarungDialog(final Paarung pairing) {
+	public PairingDialog(final Pairing pairing) {
 		this.pairing = pairing;
 		this.setTitle("Edit Pairing");
 		this.initModality(Modality.WINDOW_MODAL);
 		try {
 			this.setScene(new Scene(ResourceManager.loadNewResource(
-					"Sportgames.PaarungDialog", this)));
+					"Sportgames.PairingDialog", this)));
 		} catch (IOException e) {
-			System.out.println("Unable to initialize PaarungDialog");
+			e.printStackTrace();
+			System.out.println("Unable to initialize PairingDialog");
 		}
 	}
 
@@ -66,14 +67,14 @@ public class PaarungDialog extends Stage {
 		this.stateBox.valueProperty().addListener((v, o , n) -> {
 			switch (n) {
 				case NOT_STARTED:
-					PaarungDialog.this.firstTeamGoals.setText("0");
-					PaarungDialog.this.secondTeamGoals.setText("0");
-					PaarungDialog.this.firstTeamGoals.setDisable(true);
-					PaarungDialog.this.secondTeamGoals.setDisable(true);
+					PairingDialog.this.firstTeamGoals.setText("0");
+					PairingDialog.this.secondTeamGoals.setText("0");
+					PairingDialog.this.firstTeamGoals.setDisable(true);
+					PairingDialog.this.secondTeamGoals.setDisable(true);
 					break;
 				default:
-					PaarungDialog.this.firstTeamGoals.setDisable(false);
-					PaarungDialog.this.secondTeamGoals.setDisable(false);
+					PairingDialog.this.firstTeamGoals.setDisable(false);
+					PairingDialog.this.secondTeamGoals.setDisable(false);
 					break;
 			}
 		});

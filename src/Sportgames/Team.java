@@ -7,15 +7,15 @@ import java.io.Serializable;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-public class Verein implements Serializable {
+public class Team implements Serializable {
 	private static final long serialVersionUID = 1020500889918654466L;
 	private StringProperty name;
 
-	protected Verein() {
+	protected Team() {
 		this.name = new SimpleStringProperty();
 	}
 
-	public Verein(final String name) {
+	public Team(final String name) {
 		this();
 		this.name.set(name);
 	}
@@ -94,11 +94,9 @@ public class Verein implements Serializable {
 
 	@Override
 	public boolean equals(Object other) {
-		if (other == null || !(other instanceof Verein)) {
-			return false;
-		}
-		final Verein that = (Verein)other;
-		return this.name.get().equals(that.name.get());
+		return other != null && other instanceof Team
+				? this.name.get().equals(((Team)other).name.get())
+				: false;
 	}
 
 	@Override
@@ -114,7 +112,7 @@ public class Verein implements Serializable {
 			throws IOException, ClassNotFoundException {
 		final Object read = in.readObject();
 		if (!(read instanceof String)) {
-			throw new IOException("Unable to read Instance of Verein");
+			throw new IOException("Unable to read Instance of Team");
 		}
 		if (this.name == null) {
 			this.name = new SimpleStringProperty();

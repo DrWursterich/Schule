@@ -26,7 +26,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -60,17 +62,17 @@ public class Main extends Application {
 	@FXML
 	private MenuItem menuAssociations;
 	@FXML
-	private TableView<Verein> table;
+	private TableView<Team> table;
 	@FXML
 	private ScrollPane scrollPane;
 	@FXML
 	private VBox pairingsPane;
 	@FXML
-	private final ObservableList<Verein> associations =
+	private final ObservableList<Team> teams =
 			FXCollections.observableArrayList();
 	private static Main instance;
 	private File lastSaved;
-	private final ArrayList<Paarung> pairings = new ArrayList<>();
+	private final ArrayList<Pairing> pairings = new ArrayList<>();
 
 	public static Main getInstance() {
 		return Main.instance;
@@ -91,16 +93,14 @@ public class Main extends Application {
 	}
 
 	public void initialize() {
-		this.table.setItems(this.associations);
+		this.table.setItems(this.teams);
 		this.generatePairings();
+		HBox.setHgrow(this.scrollPane, Priority.ALWAYS);
 		this.pairingsPane.prefWidthProperty().bind(
 				Bindings.createDoubleBinding(() -> {
-					return this.scrollPane.getWidth()
-							- this.pairingsPane.getPadding().getLeft()
-							- this.pairingsPane.getPadding().getRight();
+					return this.scrollPane.getViewportBounds().getWidth();
 				},
-				this.scrollPane.widthProperty(),
-				this.pairingsPane.paddingProperty()));
+				this.scrollPane.viewportBoundsProperty()));
 	}
 
 	public void open() {
@@ -147,11 +147,11 @@ public class Main extends Application {
 		System.exit(0);
 	}
 
-	public void associations() {
-		AssociationsDialog dialog = new AssociationsDialog();
-		final Optional<List<Verein>> result = dialog.showAndWait();
+	public void teams() {
+		TeamsDialog dialog = new TeamsDialog();
+		final Optional<List<Team>> result = dialog.showAndWait();
 		if (result != null && result.isPresent()) {
-			this.associations.setAll(result.get());
+			this.teams.setAll(result.get());
 			this.generatePairings();
 		}
 	}
@@ -182,14 +182,14 @@ public class Main extends Application {
 			out = new ZipOutputStream(new FileOutputStream(file));
 			objOut = new ObjectOutputStream(new BufferedOutputStream(out));
 			out.putNextEntry(new ZipEntry(Main.FILE_NAME_TEAMS));
-			objOut.writeObject(this.associations.toArray(
-					new Verein[this.associations.size()]));
+			objOut.writeObject(this.teams.toArray(
+					new Team[this.teams.size()]));
 			objOut.flush();
 			out.closeEntry();
 			out.putNextEntry(new ZipEntry(Main.FILE_NAME_PAIRINGS));
 			objOut2 = new ObjectOutputStream(new BufferedOutputStream(out));
 			objOut2.writeObject(this.pairings.toArray(
-					new Paarung[this.pairings.size()]));
+					new Pairing[this.pairings.size()]));
 			objOut2.flush();
 			out.closeEntry();
 			this.lastSaved = file;
@@ -231,7 +231,7 @@ public class Main extends Application {
 						objIn = new ObjectInputStream(
 								new BufferedInputStream(
 									zip.getInputStream(entry)));
-						this.associations.setAll((Verein[])objIn.readObject());
+						this.teams.setAll((Team[])objIn.readObject());
 						objIn.close();
 						break;
 					case Main.FILE_NAME_PAIRINGS:
@@ -241,7 +241,7 @@ public class Main extends Application {
 									zip.getInputStream(entry)));
 						this.pairings.clear();
 						this.pairings.addAll(
-								Arrays.asList((Paarung[])objIn.readObject()));
+								Arrays.asList((Pairing[])objIn.readObject()));
 						this.updatePairingsPane();
 						objIn.close();
 						break;
@@ -277,10 +277,10 @@ public class Main extends Application {
 	private void generatePairings() {
 		this.pairings.clear();
 		GregorianCalendar date = new GregorianCalendar();
-		for (Verein firstTeam : this.associations) {
-			for (Verein secondTeam : this.associations) {
+		for (Team firstTeam : this.teams) {
+			for (Team secondTeam : this.teams) {
 				if (!firstTeam.equals(secondTeam)) {
-					this.pairings.add(new Paarung(
+					this.pairings.add(new Pairing(
 							Main.LOCATIONS[(int)(
 									Math.random()
 									* (Main.LOCATIONS.length - 1))],
@@ -303,11 +303,11 @@ public class Main extends Application {
 		this.pairingsPane.getChildren().setAll(this.pairings);
 	}
 
-	public List<Verein> getAssociations() {
-		return this.associations;
+	public List<Team> getTeams() {
+		return this.teams;
 	}
 
-	public List<Paarung> getPairings() {
+	public List<Pairing> getPairings() {
 		return this.pairings;
 	}
 

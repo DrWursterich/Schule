@@ -9,8 +9,6 @@
 <VBox fx:id="root"
 		maxHeight="1.7976931348623157E308"
 		maxWidth="1.7976931348623157E308"
-		prefHeight="320.0"
-		prefWidth="400.0"
 		xmlns="http://javafx.com/javafx/8"
 		xmlns:fx="http://javafx.com/fxml/1">
 	<children>
@@ -18,20 +16,16 @@
 			<menus>
 				<Menu mnemonicParsing="false" text="File">
 					<items>
-						<MenuItem fx:id="menuOpen"
-								mnemonicParsing="false"
+						<MenuItem mnemonicParsing="false"
 								onAction="#open" text="Open"/>
-						<MenuItem fx:id="menuSave"
-								mnemonicParsing="false"
+						<MenuItem mnemonicParsing="false"
 								onAction="#save"
 								text="Save"/>
-						<MenuItem fx:id="menuSaveAs"
-								mnemonicParsing="false"
+						<MenuItem mnemonicParsing="false"
 								onAction="#saveAs"
 								text="Save as"/>
 						<SeparatorMenuItem mnemonicParsing="false"/>
-						<MenuItem fx:id="menuClose"
-								mnemonicParsing="false"
+						<MenuItem mnemonicParsing="false"
 								onAction="#close"
 								text="Close"/>
 					</items>
@@ -39,10 +33,9 @@
 				<Menu mnemonicParsing="false"
 						text="Edit">
 					<items>
-						<MenuItem fx:id="menuAssociations"
-								onAction="#associations"
-								mnemonicParsing="false"
-								text="Associations"/>
+						<MenuItem mnemonicParsing="false"
+								onAction="#teams"
+								text="Teams"/>
 					</items>
 				</Menu>
 				<Menu mnemonicParsing="false"
@@ -59,79 +52,84 @@
 				tabClosingPolicy="UNAVAILABLE"
 				VBox.vgrow="ALWAYS">
 			<tabs>
-				<Tab text="Tabelle">
+				<Tab text="Table">
 					<content>
-						<TableView fx:id="table"
-								layoutX="45.0"
-								maxHeight="1.7976931348623157E308"
-								maxWidth="1.7976931348623157E308">
-							<columns>
-								<TableColumn maxWidth="1.7976931348623157E308"
-										prefWidth="65.0"
-										text="Verein">
-									<cellValueFactory>
-										<PropertyValueFactory property="name"/>
-									</cellValueFactory>
-								</TableColumn>
-								<TableColumn fx:id="pointsColumn"
-										maxWidth="1.7976931348623157E308"
-										prefWidth="65.0"
-										text="Punkte">
-									<cellValueFactory>
-										<PropertyValueFactory property="points"/>
-									</cellValueFactory>
-								</TableColumn>
-								<TableColumn maxWidth="1.7976931348623157E308"
-										prefWidth="65.0"
-										text="Spiele">
-									<cellValueFactory>
-										<PropertyValueFactory property="games"/>
-									</cellValueFactory>
-								</TableColumn>
-								<TableColumn maxWidth="1.7976931348623157E308"
-										prefWidth="65.0"
-										text="Siege">
-									<cellValueFactory>
-										<PropertyValueFactory property="victories"/>
-									</cellValueFactory>
-								</TableColumn>
-								<TableColumn maxWidth="1.7976931348623157E308"
-										prefWidth="65.0"
-										text="Niederlagen">
-									<cellValueFactory>
-										<PropertyValueFactory property="losses"/>
-									</cellValueFactory>
-								</TableColumn>
-								<TableColumn maxWidth="1.7976931348623157E308"
-										prefWidth="65.0"
-										text="Unentschieden">
-									<cellValueFactory>
-										<PropertyValueFactory property="draws"/>
-									</cellValueFactory>
-								</TableColumn>
-							</columns>
-							<items>
-								<FXCollections fx:factory="observableArrayList">
-								</FXCollections>
-							</items>
-							<placeholder>
-								<VBox id="tablePlaceholder"
-										HBox.hgrow="ALWAYS"
-										VBox.vgrow="ALWAYS">
-									<Label text="There are no Associations yet."/>
-									<Button text="Edit Associations"
-											onAction="#associations"/>
-								</VBox>
-							</placeholder>
-							<sortOrder>
-								<fx:reference source="pointsColumn"/>
-							</sortOrder>
-						</TableView>
+						<AnchorPane>
+							<TableView fx:id="table"
+									maxHeight="1.7976931348623157E308"
+									maxWidth="1.7976931348623157E308"
+									tableMenuButtonVisible="true"
+									AnchorPane.leftAnchor="0.0"
+									AnchorPane.rightAnchor="0.0"
+									AnchorPane.bottomAnchor="0.0"
+									AnchorPane.topAnchor="0.0">
+								<columns>
+									<TableColumn maxWidth="1.7976931348623157E308"
+											text="Team">
+										<cellValueFactory>
+											<PropertyValueFactory property="name"/>
+										</cellValueFactory>
+									</TableColumn>
+									<TableColumn fx:id="pointsColumn"
+											maxWidth="1.7976931348623157E308"
+											text="Points">
+										<cellValueFactory>
+											<PropertyValueFactory property="points"/>
+										</cellValueFactory>
+									</TableColumn>
+									<TableColumn maxWidth="1.7976931348623157E308"
+											text="Games">
+										<cellValueFactory>
+											<PropertyValueFactory property="games"/>
+										</cellValueFactory>
+									</TableColumn>
+									<TableColumn maxWidth="1.7976931348623157E308"
+											text="Wins">
+										<cellValueFactory>
+											<PropertyValueFactory property="victories"/>
+										</cellValueFactory>
+									</TableColumn>
+									<TableColumn maxWidth="1.7976931348623157E308"
+											text="Losses">
+										<cellValueFactory>
+											<PropertyValueFactory property="losses"/>
+										</cellValueFactory>
+									</TableColumn>
+									<TableColumn maxWidth="1.7976931348623157E308"
+											text="Draws">
+										<cellValueFactory>
+											<PropertyValueFactory property="draws"/>
+										</cellValueFactory>
+									</TableColumn>
+								</columns>
+								<items>
+									<FXCollections fx:factory="observableArrayList">
+									</FXCollections>
+								</items>
+								<placeholder>
+									<VBox id="tablePlaceholder"
+											HBox.hgrow="ALWAYS"
+											VBox.vgrow="ALWAYS">
+										<Label text="There are no Teams defined."/>
+										<Button text="Edit Teams"
+												onAction="#teams"
+												prefWidth="100"/>
+										<Button text="Load File"
+												onAction="#open"
+												prefWidth="100"/>
+									</VBox>
+								</placeholder>
+								<sortOrder>
+									<fx:reference source="pointsColumn"/>
+								</sortOrder>
+							</TableView>
+						</AnchorPane>
 					</content>
 				</Tab>
-				<Tab text="Spiele">
+				<Tab text="Games">
 					<content>
-						<ScrollPane fx:id="scrollPane">
+						<ScrollPane fx:id="scrollPane"
+								hbarPolicy="NEVER">
 							<VBox fx:id="pairingsPane"
 									id="pairingsPane"/>
 						</ScrollPane>

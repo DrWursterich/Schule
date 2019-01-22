@@ -23,7 +23,9 @@
 				prefWidth="130"/>
 	</HBox>
 	<HBox>
-		<Label fx:id="locationLabel"/>
-		<Label fx:id="dateLabel"/>
+		<Label fx:id="locationLabel"
+				prefWidth="180"/>
+		<Label fx:id="dateLabel"
+				prefWidth="180"/>
 	</HBox>
 </fx:root>

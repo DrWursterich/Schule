@@ -14,9 +14,9 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.Modality;
 import resource.ResourceManager;
 
-public class AssociationsDialog extends Dialog<List<Verein>> {
+public class TeamsDialog extends Dialog<List<Team>> {
 
-	public class VereinListCell extends ListCell<Verein> {
+	public class VereinListCell extends ListCell<Team> {
 		private final TextField textField = new TextField();
 
 		public VereinListCell() {
@@ -26,12 +26,12 @@ public class AssociationsDialog extends Dialog<List<Verein>> {
 						this.cancelEdit();
 						break;
 					case ENTER:
-						if (AssociationsDialog.this.listContainsAssociationName(
+						if (TeamsDialog.this.listContainsTeamName(
 								this.textField.getText())) {
 							this.cancelEdit();
 						} else {
 							this.commitEdit(
-									new Verein(this.textField.getText()));
+									new Team(this.textField.getText()));
 						}
 						break;
 					default:
@@ -42,7 +42,7 @@ public class AssociationsDialog extends Dialog<List<Verein>> {
 		}
 
 		@Override
-		protected void updateItem(Verein item, boolean empty) {
+		protected void updateItem(Team item, boolean empty) {
 			super.updateItem(item, empty);
 			if (this.isEditing()) {
 				this.textField.setText(
@@ -72,17 +72,17 @@ public class AssociationsDialog extends Dialog<List<Verein>> {
 		}
 
 		@Override
-		public void commitEdit(Verein newValue) {
+		public void commitEdit(Team newValue) {
 			super.commitEdit(newValue);
 		}
 	}
 
 	@FXML
-	private ListView<Verein> list;
+	private ListView<Team> list;
 
 	@FXML
 	public void initialize() {
-		this.list.getItems().setAll(Main.getInstance().getAssociations());
+		this.list.getItems().setAll(Main.getInstance().getTeams());
 		this.list.setCellFactory(e -> new VereinListCell());
 		this.list.setEditable(true);
 		this.list.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -90,7 +90,9 @@ public class AssociationsDialog extends Dialog<List<Verein>> {
 		this.list.setOnKeyPressed(e -> {
 			switch (e.getCode()) {
 				case N:
-					if (e.isControlDown() && !e.isAltDown() && !e.isShiftDown()) {
+					if (e.isControlDown()
+							&& !e.isAltDown()
+							&& !e.isShiftDown()) {
 						this.add();
 						e.consume();
 					}
@@ -101,18 +103,18 @@ public class AssociationsDialog extends Dialog<List<Verein>> {
 		});
 	}
 
-	public AssociationsDialog() {
+	public TeamsDialog() {
 		this.getDialogPane().getButtonTypes().setAll(
 				ButtonType.APPLY, ButtonType.CANCEL);
 		this.setResultConverter(e ->
 				ButtonType.APPLY.equals(e) ? this.list.getItems() : null);
-		this.setTitle("Edit Associations");
+		this.setTitle("Edit Teams");
 		this.setHeaderText("If Changes are saved, Team-Pairings will reset!");
 		this.initModality(Modality.WINDOW_MODAL);
 		try {
-			ResourceManager.initDialog(this, "Sportgames.AssociationsDialog");
+			ResourceManager.initDialog(this, "Sportgames.TeamsDialog");
 		} catch (final IOException e) {
-			System.out.println("Unable to initialize AssociationsDialog");
+			System.out.println("Unable to initialize TeamsDialog");
 		}
 	}
 
@@ -122,20 +124,20 @@ public class AssociationsDialog extends Dialog<List<Verein>> {
 	}
 
 	public void add() {
-		final String baseName = "new Association";
+		final String baseName = "new Team";
 		int counter = 1;
 		String name = baseName;
-		while (this.listContainsAssociationName(name)) {
+		while (this.listContainsTeamName(name)) {
 			name = baseName + counter++;
 		}
-		final Verein team = new Verein(name);
+		final Team team = new Team(name);
 		this.list.getItems().add(team);
 		this.list.getSelectionModel().clearSelection();
 		this.list.getSelectionModel().select(team);
 		this.list.edit(this.list.getSelectionModel().getSelectedIndex());
 	}
 
-	private boolean listContainsAssociationName(final String name) {
+	private boolean listContainsTeamName(final String name) {
 		return this.list.getItems().stream()
 				.filter(e -> name.equals(e.getName()))
 				.count() > 0;

@@ -24,22 +24,22 @@ import javafx.scene.paint.Paint;
 import javafx.util.Pair;
 import resource.ResourceManager;
 
-public class Paarung extends VBox implements Serializable {
+public class Pairing extends VBox implements Serializable {
 
 	class TeamStatistic {
-		private final Verein team;
+		private final Team team;
 		private IntegerProperty goalsProperty;
 
-		TeamStatistic(final Verein team) {
+		TeamStatistic(final Team team) {
 			this(team, 0);
 		}
 
-		TeamStatistic(final Verein team, final int goals) {
+		TeamStatistic(final Team team, final int goals) {
 			this.team = team;
 			this.goalsProperty = new SimpleIntegerProperty(goals);
 		}
 
-		public Verein getTeam() {
+		public Team getTeam() {
 			return this.team;
 		}
 
@@ -78,20 +78,20 @@ public class Paarung extends VBox implements Serializable {
 	@FXML
 	private Label dateLabel;
 
-	public Paarung(
+	public Pairing(
 			final String location,
 			final GregorianCalendar date,
-			final Verein firstTeam,
-			final Verein secondTeam) {
+			final Team firstTeam,
+			final Team secondTeam) {
 		this.initialize(location, date, firstTeam, secondTeam);
 	}
 
 	private void initialize(
 			final String location,
 			final GregorianCalendar date,
-			final Verein firstTeam,
-			final Verein secondTeam) {
-		ResourceManager.initResource(this, "Sportgames.Paarung", this);
+			final Team firstTeam,
+			final Team secondTeam) {
+		ResourceManager.initResource(this, "Sportgames.Pairing", this);
 		this.location = new SimpleStringProperty(location);
 		this.date = new SimpleObjectProperty<>(date);
 		this.firstTeam = new TeamStatistic(firstTeam);
@@ -185,17 +185,17 @@ public class Paarung extends VBox implements Serializable {
 		this.date.set(date);
 	}
 
-	public Verein[] getTeams() {
-		return new Verein[] {
+	public Team[] getTeams() {
+		return new Team[] {
 				this.firstTeam.getTeam(),
 				this.secondTeam.getTeam()};
 	}
 
-	public Verein getFirstTeam() {
+	public Team getFirstTeam() {
 		return this.firstTeam.getTeam();
 	}
 
-	public Verein getSecondTeam() {
+	public Team getSecondTeam() {
 		return this.secondTeam.getTeam();
 	}
 
@@ -230,7 +230,7 @@ public class Paarung extends VBox implements Serializable {
 	}
 
 	public void edit() {
-		new PaarungDialog(this).showAndWait();
+		new PairingDialog(this).showAndWait();
 	}
 
 	@Override
@@ -254,8 +254,8 @@ public class Paarung extends VBox implements Serializable {
 
 	private void readObject(ObjectInputStream stream)
 			throws IOException, ClassNotFoundException {
-		final Verein firstTeam = (Verein)stream.readObject();
-		final Verein secondTeam = (Verein)stream.readObject();
+		final Team firstTeam = (Team)stream.readObject();
+		final Team secondTeam = (Team)stream.readObject();
 		final int firstTeamGoals = stream.readInt();
 		final int secondTeamGoals = stream.readInt();
 		final String location = (String)stream.readObject();
@@ -269,20 +269,20 @@ public class Paarung extends VBox implements Serializable {
 
 	private void updateColors() {
 		if (this.getFirstTeamGoals() > this.getSecondTeamGoals()) {
-			this.firstTeamLabel.setTextFill(Paarung.WINNING_TEAM_COLOR);
-			this.firstTeamGoals.setTextFill(Paarung.WINNING_TEAM_COLOR);
-			this.secondTeamLabel.setTextFill(Paarung.LOSING_TEAM_COLOR);
-			this.secondTeamGoals.setTextFill(Paarung.LOSING_TEAM_COLOR);
+			this.firstTeamLabel.setTextFill(Pairing.WINNING_TEAM_COLOR);
+			this.firstTeamGoals.setTextFill(Pairing.WINNING_TEAM_COLOR);
+			this.secondTeamLabel.setTextFill(Pairing.LOSING_TEAM_COLOR);
+			this.secondTeamGoals.setTextFill(Pairing.LOSING_TEAM_COLOR);
 		} else if (this.getFirstTeamGoals() < this.getSecondTeamGoals()) {
-			this.firstTeamLabel.setTextFill(Paarung.LOSING_TEAM_COLOR);
-			this.firstTeamGoals.setTextFill(Paarung.LOSING_TEAM_COLOR);
-			this.secondTeamLabel.setTextFill(Paarung.WINNING_TEAM_COLOR);
-			this.secondTeamGoals.setTextFill(Paarung.WINNING_TEAM_COLOR);
+			this.firstTeamLabel.setTextFill(Pairing.LOSING_TEAM_COLOR);
+			this.firstTeamGoals.setTextFill(Pairing.LOSING_TEAM_COLOR);
+			this.secondTeamLabel.setTextFill(Pairing.WINNING_TEAM_COLOR);
+			this.secondTeamGoals.setTextFill(Pairing.WINNING_TEAM_COLOR);
 		} else {
-			this.firstTeamLabel.setTextFill(Paarung.DRAWING_TEAM_COLOR);
-			this.firstTeamGoals.setTextFill(Paarung.DRAWING_TEAM_COLOR);
-			this.secondTeamLabel.setTextFill(Paarung.DRAWING_TEAM_COLOR);
-			this.secondTeamGoals.setTextFill(Paarung.DRAWING_TEAM_COLOR);
+			this.firstTeamLabel.setTextFill(Pairing.DRAWING_TEAM_COLOR);
+			this.firstTeamGoals.setTextFill(Pairing.DRAWING_TEAM_COLOR);
+			this.secondTeamLabel.setTextFill(Pairing.DRAWING_TEAM_COLOR);
+			this.secondTeamGoals.setTextFill(Pairing.DRAWING_TEAM_COLOR);
 		}
 	}
 }

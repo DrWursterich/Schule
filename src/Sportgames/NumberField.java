@@ -34,7 +34,9 @@ public class NumberField extends TextField {
 				new StringConverter<Number>() {
 			@Override public Integer fromString(String string) {
 				try {
-					return "".equals(string.trim()) ? 0 : Integer.parseInt(string);
+					return "".equals(string.trim())
+							? 0
+							: Integer.parseInt(string);
 				} catch (final NumberFormatException e) {
 					return 0;
 				}
@@ -45,7 +47,9 @@ public class NumberField extends TextField {
 				return number.toString();
 			}
 		});
-		this.setTextFormatter(new TextFormatter<>(new StringConverter<String>() {
+		this.setTextFormatter(
+				new TextFormatter<>(
+					new StringConverter<String>() {
 			@Override
 			public String toString(String string) {
 				return this.formatString(string);

@@ -29,15 +29,15 @@ public class Team implements Serializable {
 				e -> PairingState.FINISHED.equals(e.getState())
 						&& (this.equals(e.getFirstTeam())
 							|| this.equals(e.getSecondTeam()))
-					? (e.getFirstTeamGoals() != e.getSecondTeamGoals()
-						? (this.equals(e.getFirstTeam())
-							? (e.getFirstTeamGoals() > e.getSecondTeamGoals()
+					? e.getFirstTeamGoals() != e.getSecondTeamGoals()
+						? this.equals(e.getFirstTeam())
+							? e.getFirstTeamGoals() > e.getSecondTeamGoals()
 								? 3
-								: 0)
-							: (e.getFirstTeamGoals() > e.getSecondTeamGoals()
+								: 0
+							: e.getFirstTeamGoals() > e.getSecondTeamGoals()
 								? 0
-								: 3))
-						: 1)
+								: 3
+						: 1
 					: 0).sum();
 	}
 
@@ -56,13 +56,13 @@ public class Team implements Serializable {
 						&& (this.equals(e.getFirstTeam())
 							|| this.equals(e.getSecondTeam())
 						&& e.getFirstTeamGoals() != e.getSecondTeamGoals())
-					? (this.equals(e.getFirstTeam())
-						? (e.getFirstTeamGoals() > e.getSecondTeamGoals()
+					? this.equals(e.getFirstTeam())
+						? e.getFirstTeamGoals() > e.getSecondTeamGoals()
 							? 1
-							: 0)
-						: (e.getFirstTeamGoals() > e.getSecondTeamGoals()
+							: 0
+						: e.getFirstTeamGoals() > e.getSecondTeamGoals()
 							? 0
-							: 1))
+							: 1
 					: 0).sum();
 	}
 
@@ -72,13 +72,13 @@ public class Team implements Serializable {
 						&& (this.equals(e.getFirstTeam())
 							|| this.equals(e.getSecondTeam())
 						&& e.getFirstTeamGoals() != e.getSecondTeamGoals())
-					? (this.equals(e.getFirstTeam())
-						? (e.getFirstTeamGoals() > e.getSecondTeamGoals()
+					? this.equals(e.getFirstTeam())
+						? e.getFirstTeamGoals() > e.getSecondTeamGoals()
 							? 0
-							: 1)
-						: (e.getFirstTeamGoals() > e.getSecondTeamGoals()
+							: 1
+						: e.getFirstTeamGoals() > e.getSecondTeamGoals()
 							? 1
-							: 0))
+							: 0
 					: 0).sum();
 	}
 
@@ -92,8 +92,41 @@ public class Team implements Serializable {
 							: 0).sum();
 	}
 
+	public int getGoals() {
+		return Main.getInstance().getPairings().stream().mapToInt(
+				e -> PairingState.FINISHED.equals(e.getState())
+						&& (this.equals(e.getFirstTeam())
+							|| this.equals(e.getSecondTeam()))
+					? this.equals(e.getFirstTeam())
+						? e.getFirstTeamGoals()
+						: e.getSecondTeamGoals()
+					: 0).sum();
+	}
+
+	public int getConsidingGoals() {
+		return Main.getInstance().getPairings().stream().mapToInt(
+				e -> PairingState.FINISHED.equals(e.getState())
+				&& (this.equals(e.getFirstTeam())
+						|| this.equals(e.getSecondTeam()))
+				? this.equals(e.getFirstTeam())
+					? e.getSecondTeamGoals()
+					: e.getFirstTeamGoals()
+				: 0).sum();
+	}
+
+	public int getGoalDifference() {
+		return Main.getInstance().getPairings().stream().mapToInt(
+				e -> PairingState.FINISHED.equals(e.getState())
+				&& (this.equals(e.getFirstTeam())
+						|| this.equals(e.getSecondTeam()))
+				? this.equals(e.getFirstTeam())
+					? e.getFirstTeamGoals() - e.getSecondTeamGoals()
+					: e.getSecondTeamGoals() - e.getFirstTeamGoals()
+				: 0).sum();
+	}
+
 	@Override
-	public boolean equals(Object other) {
+	public boolean equals(final Object other) {
 		return other != null && other instanceof Team
 				? this.name.get().equals(((Team)other).name.get())
 				: false;

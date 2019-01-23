@@ -101,6 +101,24 @@
 											<PropertyValueFactory property="draws"/>
 										</cellValueFactory>
 									</TableColumn>
+									<TableColumn maxWidth="1.7976931348623157E308"
+											text="Goals">
+										<cellValueFactory>
+											<PropertyValueFactory property="goals"/>
+										</cellValueFactory>
+									</TableColumn>
+									<TableColumn maxWidth="1.7976931348623157E308"
+											text="C. Goals">
+										<cellValueFactory>
+											<PropertyValueFactory property="considingGoals"/>
+										</cellValueFactory>
+									</TableColumn>
+									<TableColumn maxWidth="1.7976931348623157E308"
+											text="Goals D.">
+										<cellValueFactory>
+											<PropertyValueFactory property="goalDifference"/>
+										</cellValueFactory>
+									</TableColumn>
 								</columns>
 								<items>
 									<FXCollections fx:factory="observableArrayList">

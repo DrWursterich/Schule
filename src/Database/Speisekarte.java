@@ -95,9 +95,9 @@ public class Speisekarte extends Application {
 						= this.connection.prepareStatement(
 							"INSERT INTO Speisen(Bezeichnung, Kategorie, Preis)"
 							+ " VALUES (?, ?, ?);");
-				statement.setString(0, this.getBezeich().getText());
-				statement.setString(1, this.getKategorie().getText());
-				statement.setInt(2,
+				statement.setString(1, this.getBezeich().getText());
+				statement.setString(2, this.getKategorie().getText());
+				statement.setInt(3,
 						Integer.parseInt(this.getPreis().getText()));
 				statement.execute();
 			} catch (final Exception ex) {
@@ -138,9 +138,9 @@ public class Speisekarte extends Application {
 				final PreparedStatement statement
 						= this.connection.prepareStatement(
 							"UPDATE Speisen SET Preis = ? WHERE SpNr LIKE ?;");
-				statement.setInt(0,
+				statement.setInt(1,
 						Integer.parseInt(this.getNeuerPreis().getText()));
-				statement.setString(1, this.getSpnr2().getText());
+				statement.setString(2, this.getSpnr2().getText());
 				statement.execute();
 			} catch (final Exception ex) {
 				ex.printStackTrace();
